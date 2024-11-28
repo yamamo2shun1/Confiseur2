@@ -19,11 +19,12 @@
         AngleLeftOutline,
         AngleRightOutline,
         AngleUpOutline,
-        ChevronRightOutline
+        ChevronRightOutline,
+        VolumeDownOutline,
+        VolumeUpOutline
     } from "flowbite-svelte-icons";
 
     let radioGroup = "";
-    let keycode = "";
 
     let allKeyMaps = [
         {value: " ", name: '&nbsp;'},
@@ -68,17 +69,17 @@
         {value: "BS", name: "Backspace"},
         {value: "Tab", name: "Tab"},
         {value: "Space", name: "Space"},
-        {value: "Minus", name: "-_"},
-        {value: "Equal", name: "=+"},
-        {value: "O_SBracket", name: "[{"},
-        {value: "C_SBracket", name: "]}"},
-        {value: "Backslash", name: "\|"},
-        {value: "Colon", name: ";:"},
-        {value: "Apostrophe", name: "'\""},
-        {value: "Backquote", name: "`~"},
-        {value: "Comma", name: ",<"},
-        {value: "Period", name: ".>"},
-        {value: "Slash", name: "/?"},
+        {value: "-_", name: "-_"},
+        {value: "=+", name: "=+"},
+        {value: "[{", name: "[{"},
+        {value: "]}", name: "]}"},
+        {value: "\|", name: "\|"},
+        {value: ";:", name: ";:"},
+        {value: "'\"", name: "'\""},
+        {value: "`~", name: "`~"},
+        {value: ",<", name: ",<"},
+        {value: ".>", name: ".>"},
+        {value: "/?", name: "/?"},
         {value: "CpLk", name: "Caps Lock"},
         {value: "F1", name: "F1"},
         {value: "F2", name: "F2"},
@@ -92,27 +93,27 @@
         {value: "F10", name: "F10"},
         {value: "F11", name: "F11"},
         {value: "F12", name: "F12"},
-        {value: "PrintScreen", name: "Print Screen"},
-        {value: "ScrollLock", name: "Scroll Lock"},
+        {value: "PrScn", name: "Print Screen"},
+        {value: "ScLck", name: "Scroll Lock"},
         {value: "Pause", name: "Pause"},
         {value: "Ins", name: "Insert"},
         {value: "Home", name: "Home"},
-        {value: "PageUp", name: "Page Up"},
+        {value: "PgUp", name: "Page Up"},
         {value: "Del", name: "Delete"},
         {value: "End", name: "End"},
-        {value: "PageDown", name: "Page Down"},
+        {value: "PgDwn", name: "Page Down"},
         {value: "Right", name: "Right"},
         {value: "Left", name: "Left"},
         {value: "Down", name: "Down"},
         {value: "Up", name: "Up"},
-        {value: "NumLock", name: "Num Lock"},
+        {value: "NmLck", name: "Num Lock"},
         {value: "Katakana", name: "カタカナ ひらがな"},
-        {value: "Yen", name: "￥|"},
-        {value: "Henkan", name: "変換"},
-        {value: "Muhenkan", name: "無変換"},
-        {value: "M_LBTN", name: "Mouse Left Button"},
-        {value: "M_RBTN", name: "Mouse Right Button"},
-        {value: "M_WHEEL", name: "Mouse Wheel"},
+        {value: "￥|", name: "￥|"},
+        {value: "Cnv", name: "変換"},
+        {value: "NoCnv", name: "無変換"},
+        {value: "M_LB", name: "Mouse Left Button"},
+        {value: "M_RB", name: "Mouse Right Button"},
+        {value: "M_WHL", name: "Mouse Wheel"},
         {value: "Reset", name: "Reset"},
         {value: "XF_CUT1", name: "XFader Cut Ch.1(Phono/Line In)"},
         {value: "XF_CUT2", name: "XFader Cut Ch.2(USB)"},
@@ -120,21 +121,35 @@
         {value: "MGain_Down", name: "Master Gain Down"},
         {value: "Upper", name: "Upper"},
         {value: "LNPH", name: "Line Phono Switch"},
-        {value: "LAYOUT", name: "Layout Switch"},
+        {value: "L1/L2", name: "Layout Switch"},
     ]
 
     let normalLayout1 = [
         ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
-        ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';'],
-        ['Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/'],
-        ['', 'GUI', 'ALT', 'STK1', 'CTRL', 'STK2', 'Left', 'Down', 'Up', 'Right']
+        ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';:'],
+        ['Z', 'X', 'C', 'V', 'B', 'N', 'M', ',<', '.>', '/?'],
+        ['', 'Mod.', 'Mod.', 'STK1', 'Mod.', 'STK2', 'Left', 'Down', 'Up', 'Right']
+    ];
+
+    let normalModifiers1 = [
+      [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
+      [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
+      [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
+      [0b00000000, 0b10000000, 0b01000000, 0b00000000, 0b00010000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000]
     ];
 
     let upperLayout1 = [
-        ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
-        ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';'],
-        ['Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/'],
-        ['', 'GUI', 'ALT', 'STK1', 'CTRL', 'STK2', 'Left', 'Down', 'Up', 'Right']
+        ['1!', '2@', '3#', '4$', '5%', '6^', '7&', '8*', '9(', '0)'],
+        ['`~', '\'"', '', '', '', '', '[{', ']}', '-_', ';:'],
+        ['', '', '', '', '', '', '=+', ',<', '.>', '/?'],
+        ['', 'LGUI', 'LALT', 'STK1', 'LCTRL', 'STK2', '', 'Master Gain Down', 'Master Gain Up', 'Reset']
+    ];
+
+    let upperModifiers1 = [
+        [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
+        [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
+        [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
+        [0b00000000, 0b10000000, 0b01000000, 0b00000000, 0b00010000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000]
     ];
 
     let selectedLayoutIndex = 0;
@@ -143,18 +158,43 @@
     let selectedRow = 0;
     let selectedCol = 0;
 
+    let isCheckedLGUI = false;
+    let isCheckedLALT = false;
+    let isCheckedLSHIFT = false;
+    let isCheckedLCTRL = false;
+    let isCheckedRGUI = false;
+    let isCheckedRALT = false;
+    let isCheckedRSHIFT = false;
+    let isCheckedRCTRL = false;
+
     function selectLayout(event, index) {
         selectedLayoutIndex = index;
     }
 
-    function selectKey() {
+    function selectKey(event) {
         let val = parseInt(event.target.value);
         selectedCol = val % 10;
         selectedRow = Math.floor(val / 10);
         //alert(`${event.target.value} val: ${val}, row: ${selectedRow}, col: ${selectedCol}`);
+
+        switch (selectedLayoutIndex) {
+            case 0:
+                isCheckedRCTRL = !!(normalModifiers1[selectedRow][selectedCol] & 0b00000001);
+                isCheckedRSHIFT = !!((normalModifiers1[selectedRow][selectedCol] >> 1) & 0b00000001);
+                isCheckedRALT = !!((normalModifiers1[selectedRow][selectedCol] >> 2) & 0b00000001);
+                isCheckedRGUI = !!((normalModifiers1[selectedRow][selectedCol] >> 3) & 0b00000001);
+                isCheckedLCTRL = !!((normalModifiers1[selectedRow][selectedCol] >> 4) & 0b00000001);
+                isCheckedLSHIFT = !!((normalModifiers1[selectedRow][selectedCol] >> 5) & 0b00000001);
+                isCheckedLALT = !!((normalModifiers1[selectedRow][selectedCol] >> 6) & 0b00000001);
+                isCheckedLGUI = !!((normalModifiers1[selectedRow][selectedCol] >> 7) & 0b00000001);
+                break;
+            case 1:
+                alert(upperLayout1[selectedRow][selectedCol]);
+                break;
+        }
     }
 
-    function renewKeycode() {
+    function renewKeycode(event) {
         if (selectedLayoutIndex === 0) {
             normalLayout1[selectedRow][selectedCol] = event.target.textContent;
         } else if (selectedLayoutIndex === 1) {
@@ -162,6 +202,23 @@
         }
 
         dropdownOpen = false;
+    }
+
+    function renewModifiers(event, index) {
+        if (selectedLayoutIndex === 0) {
+            if (event.target.checked) {
+                normalModifiers1[selectedRow][selectedCol] |= 0b00000001 << index;
+            } else {
+                normalModifiers1[selectedRow][selectedCol] &= ~(0b00000001 << index);
+            }
+        } else if (selectedLayoutIndex === 1) {
+            if (event.target.checked) {
+                upperModifiers1[selectedRow][selectedCol] |= 0b00000001 << index;
+            } else {
+                upperModifiers1[selectedRow][selectedCol] &= ~(0b00000001 << index);
+            }
+
+        }
     }
 
     function isDisabled(row, col) {
@@ -192,6 +249,12 @@
         if (name === 'Right')
             return AngleRightOutline;
 
+        if (name === 'Master Gain Up')
+            return VolumeUpOutline;
+
+        if (name === 'Master Gain Down')
+            return VolumeDownOutline;
+
         return null;
     }
 </script>
@@ -206,10 +269,13 @@
                             <RadioButton
                                     value="{10 * rowIndex + colIndex}"
                                     bind:group={radioGroup}
+                                    size="sm"
                                     class="w-12 h-12 mx-1 my-1 {isRounded(rowIndex, colIndex) ? 'rounded-full':''}"
                                     on:change={selectKey}
                                     disabled={isDisabled(rowIndex, colIndex)}>
-                                {key === 'Left' || key === 'Right' || key === 'Up' || key === 'Down' ? '' : key}
+                                {#if key !== 'Left' && key !== 'Right' && key !== 'Up' && key !== 'Down' && key !== 'Master Gain Up' && key !== 'Master Gain Down'}
+                                    {@html key}
+                                {/if}
                                 {#if isNokey(key)}
                                     &nbsp;
                                 {/if}
@@ -232,10 +298,11 @@
                             <RadioButton
                                     value="{10 * rowIndex + colIndex}"
                                     bind:group={radioGroup}
+                                    size="sm"
                                     class="w-12 h-12 mx-1 my-1 {isRounded(rowIndex, colIndex) ? 'rounded-full':''}"
                                     on:change={selectKey}
                                     disabled={isDisabled(rowIndex, colIndex)}>
-                                {key === 'Left' || key === 'Right' || key === 'Up' || key === 'Down' ? '' : key}
+                                {key === 'Left' || key === 'Right' || key === 'Up' || key === 'Down' || key === 'Master Gain Up' || key === 'Master Gain Down' ? '' : key}
                                 {#if isNokey(key)}
                                     &nbsp;
                                 {/if}
@@ -268,35 +335,35 @@
             <br>
             <Table color="indigo">
                 <TableHead>
-                    <TableHeadCell colspan="4"><Label class="text-orange-500 dark:text-orange-500">Left</Label>
+                    <TableHeadCell colspan={4}><Label class="text-orange-500 dark:text-orange-500">Left</Label>
                     </TableHeadCell>
-                    <TableHeadCell colspan="4"><Label class="text-orange-500 dark:text-orange-500">Right</Label>
+                    <TableHeadCell colspan={4}><Label class="text-orange-500 dark:text-orange-500">Right</Label>
                     </TableHeadCell>
                 </TableHead>
                 <TableBody>
                     <TableBodyCell>
-                        <Checkbox class="-mr-10 text-orange-500 dark:text-orange-500">GUI</Checkbox>
+                        <Checkbox class="-mr-10 text-orange-500 dark:text-orange-500" bind:checked={isCheckedLGUI} on:change={(event) => renewModifiers(event, 7)}>GUI</Checkbox>
                     </TableBodyCell>
                     <TableBodyCell>
-                        <Checkbox class="-mr-10 text-orange-500 dark:text-orange-500">ALT</Checkbox>
+                        <Checkbox class="-mr-10 text-orange-500 dark:text-orange-500" bind:checked={isCheckedLALT} on:change={(event) => renewModifiers(event, 6)}>ALT</Checkbox>
                     </TableBodyCell>
                     <TableBodyCell>
-                        <Checkbox class="-mr-10 text-orange-500 dark:text-orange-500">SHIFT</Checkbox>
+                        <Checkbox class="-mr-10 text-orange-500 dark:text-orange-500" bind:checked={isCheckedRSHIFT} on:change={(event) => renewModifiers(event, 5)}>SHIFT</Checkbox>
                     </TableBodyCell>
                     <TableBodyCell>
-                        <Checkbox class="-mr-10 text-orange-500 dark:text-orange-500">CTRL</Checkbox>
+                        <Checkbox class="-mr-10 text-orange-500 dark:text-orange-500" bind:checked={isCheckedLCTRL} on:change={(event) => renewModifiers(event, 4)}>CTRL</Checkbox>
                     </TableBodyCell>
                     <TableBodyCell>
-                        <Checkbox class="-mr-10 text-orange-500 dark:text-orange-500">GUI</Checkbox>
+                        <Checkbox class="-mr-10 text-orange-500 dark:text-orange-500" bind:checked={isCheckedRGUI} on:change={(event) => renewModifiers(event, 3)}>GUI</Checkbox>
                     </TableBodyCell>
                     <TableBodyCell>
-                        <Checkbox class="-mr-10 text-orange-500 dark:text-orange-500">ALT</Checkbox>
+                        <Checkbox class="-mr-10 text-orange-500 dark:text-orange-500" bind:checked={isCheckedRALT} on:change={(event) => renewModifiers(event, 2)}>ALT</Checkbox>
                     </TableBodyCell>
                     <TableBodyCell>
-                        <Checkbox class="-mr-10 text-orange-500 dark:text-orange-500">SHIFT</Checkbox>
+                        <Checkbox class="-mr-10 text-orange-500 dark:text-orange-500" bind:checked={isCheckedRSHIFT} on:change={(event) => renewModifiers(event, 1)}>SHIFT</Checkbox>
                     </TableBodyCell>
                     <TableBodyCell>
-                        <Checkbox class="-mr-15 text-orange-500 dark:text-orange-500">CTRL</Checkbox>
+                        <Checkbox class="-mr-15 text-orange-500 dark:text-orange-500" bind:checked={isCheckedRCTRL} on:change={(event) => renewModifiers(event, 0)}>CTRL</Checkbox>
                     </TableBodyCell>
                 </TableBody>
             </Table>
