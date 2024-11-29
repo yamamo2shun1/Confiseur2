@@ -10,6 +10,7 @@
         Table,
         TableBody,
         TableBodyCell,
+        TableBodyRow,
         TableHead,
         TableHeadCell,
         Tabs
@@ -19,12 +20,18 @@
         AngleLeftOutline,
         AngleRightOutline,
         AngleUpOutline,
+        ArrowDownOutline,
+        ArrowLeftOutline,
+        ArrowRightOutline,
+        ArrowUpOutline,
         ChevronRightOutline,
+        CogOutline,
         VolumeDownOutline,
         VolumeUpOutline
     } from "flowbite-svelte-icons";
 
     let radioGroup = "";
+    let directionGroup = "";
 
     let allKeyMaps = [
         {value: " ", name: '&nbsp;'},
@@ -132,10 +139,10 @@
     ];
 
     let normalModifiers1 = [
-      [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
-      [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
-      [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
-      [0b00000000, 0b10000000, 0b01000000, 0b00000000, 0b00010000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000]
+        [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
+        [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
+        [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
+        [0b00000000, 0b10000000, 0b01000000, 0b00000000, 0b00010000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000]
     ];
 
     let upperLayout1 = [
@@ -259,63 +266,59 @@
     }
 </script>
 
-<main>
-    <Tabs>
+<main class="dark bg-gray-700">
+    <Tabs class="border-gray-700">
         <TabItem open title="Normal" on:click={(event) => selectLayout(event, 0)}>
-            <div>
-                {#each normalLayout1 as row, rowIndex}
-                    {#each row as key, colIndex}
-                        {#if key !== null}
-                            <RadioButton
-                                    value="{10 * rowIndex + colIndex}"
-                                    bind:group={radioGroup}
-                                    size="sm"
-                                    class="w-12 h-12 mx-1 my-1 {isRounded(rowIndex, colIndex) ? 'rounded-full':''}"
-                                    on:change={selectKey}
-                                    disabled={isDisabled(rowIndex, colIndex)}>
-                                {#if key !== 'Left' && key !== 'Right' && key !== 'Up' && key !== 'Down' && key !== 'Master Gain Up' && key !== 'Master Gain Down'}
-                                    {@html key}
-                                {/if}
-                                {#if isNokey(key)}
-                                    &nbsp;
-                                {/if}
-                                {#if getIcon(key)}
-                                    &nbsp;<svelte:component this={getIcon(key)}
-                                                            class="w-5 h-6 -ms-1 text-white dark:text-white"/>
-                                {/if}
-                            </RadioButton>
-                        {/if}
-                    {/each}
-                    <br>
+            {#each normalLayout1 as row, rowIndex}
+                {#each row as key, colIndex}
+                    {#if key !== null}
+                        <RadioButton
+                                value="{10 * rowIndex + colIndex}"
+                                bind:group={radioGroup}
+                                size="sm"
+                                class="w-12 h-12 mx-1 my-1 bg-primary-600 {isRounded(rowIndex, colIndex) ? 'rounded-full':''}"
+                                on:change={selectKey}
+                                disabled={isDisabled(rowIndex, colIndex)}>
+                            {#if key !== 'Left' && key !== 'Right' && key !== 'Up' && key !== 'Down' && key !== 'Master Gain Up' && key !== 'Master Gain Down'}
+                                {@html key}
+                            {/if}
+                            {#if isNokey(key)}
+                                &nbsp;
+                            {/if}
+                            {#if getIcon(key)}
+                                &nbsp;<svelte:component this={getIcon(key)}
+                                                        class="w-5 h-6 -ms-1 text-white dark:text-white"/>
+                            {/if}
+                        </RadioButton>
+                    {/if}
                 {/each}
-            </div>
+                <br>
+            {/each}
         </TabItem>
         <TabItem title="Upper" on:click={(event) => selectLayout(event, 1)}>
-            <div>
-                {#each upperLayout1 as row, rowIndex}
-                    {#each row as key, colIndex}
-                        {#if key !== null}
-                            <RadioButton
-                                    value="{10 * rowIndex + colIndex}"
-                                    bind:group={radioGroup}
-                                    size="sm"
-                                    class="w-12 h-12 mx-1 my-1 {isRounded(rowIndex, colIndex) ? 'rounded-full':''}"
-                                    on:change={selectKey}
-                                    disabled={isDisabled(rowIndex, colIndex)}>
-                                {key === 'Left' || key === 'Right' || key === 'Up' || key === 'Down' || key === 'Master Gain Up' || key === 'Master Gain Down' ? '' : key}
-                                {#if isNokey(key)}
-                                    &nbsp;
-                                {/if}
-                                {#if getIcon(key)}
-                                    &nbsp;<svelte:component this={getIcon(key)}
-                                                            class="w-5 h-6 -ms-1 text-white dark:text-white"/>
-                                {/if}
-                            </RadioButton>
-                        {/if}
-                    {/each}
-                    <br>
+            {#each upperLayout1 as row, rowIndex}
+                {#each row as key, colIndex}
+                    {#if key !== null}
+                        <RadioButton
+                                value="{10 * rowIndex + colIndex}"
+                                bind:group={radioGroup}
+                                size="sm"
+                                class="w-12 h-12 mx-1 my-1 {isRounded(rowIndex, colIndex) ? 'rounded-full':''}"
+                                on:change={selectKey}
+                                disabled={isDisabled(rowIndex, colIndex)}>
+                            {key === 'Left' || key === 'Right' || key === 'Up' || key === 'Down' || key === 'Master Gain Up' || key === 'Master Gain Down' ? '' : key}
+                            {#if isNokey(key)}
+                                &nbsp;
+                            {/if}
+                            {#if getIcon(key)}
+                                &nbsp;<svelte:component this={getIcon(key)}
+                                                        class="w-5 h-6 -ms-1"/>
+                            {/if}
+                        </RadioButton>
+                    {/if}
                 {/each}
-            </div>
+                <br>
+            {/each}
         </TabItem>
     </Tabs>
     <br>
@@ -333,44 +336,171 @@
                 {/each}
             </Dropdown>
             <br>
-            <Table color="indigo">
+            <br>
+            <Table shadow>
                 <TableHead>
-                    <TableHeadCell colspan={4}><Label class="text-orange-500 dark:text-orange-500">Left</Label>
+                    <TableHeadCell colspan={4}><Label class="">Left</Label>
                     </TableHeadCell>
-                    <TableHeadCell colspan={4}><Label class="text-orange-500 dark:text-orange-500">Right</Label>
+                    <TableHeadCell colspan={4}><Label class="">Right</Label>
                     </TableHeadCell>
                 </TableHead>
                 <TableBody>
-                    <TableBodyCell>
-                        <Checkbox class="-mr-10 text-orange-500 dark:text-orange-500" bind:checked={isCheckedLGUI} on:change={(event) => renewModifiers(event, 7)}>GUI</Checkbox>
-                    </TableBodyCell>
-                    <TableBodyCell>
-                        <Checkbox class="-mr-10 text-orange-500 dark:text-orange-500" bind:checked={isCheckedLALT} on:change={(event) => renewModifiers(event, 6)}>ALT</Checkbox>
-                    </TableBodyCell>
-                    <TableBodyCell>
-                        <Checkbox class="-mr-10 text-orange-500 dark:text-orange-500" bind:checked={isCheckedRSHIFT} on:change={(event) => renewModifiers(event, 5)}>SHIFT</Checkbox>
-                    </TableBodyCell>
-                    <TableBodyCell>
-                        <Checkbox class="-mr-10 text-orange-500 dark:text-orange-500" bind:checked={isCheckedLCTRL} on:change={(event) => renewModifiers(event, 4)}>CTRL</Checkbox>
-                    </TableBodyCell>
-                    <TableBodyCell>
-                        <Checkbox class="-mr-10 text-orange-500 dark:text-orange-500" bind:checked={isCheckedRGUI} on:change={(event) => renewModifiers(event, 3)}>GUI</Checkbox>
-                    </TableBodyCell>
-                    <TableBodyCell>
-                        <Checkbox class="-mr-10 text-orange-500 dark:text-orange-500" bind:checked={isCheckedRALT} on:change={(event) => renewModifiers(event, 2)}>ALT</Checkbox>
-                    </TableBodyCell>
-                    <TableBodyCell>
-                        <Checkbox class="-mr-10 text-orange-500 dark:text-orange-500" bind:checked={isCheckedRSHIFT} on:change={(event) => renewModifiers(event, 1)}>SHIFT</Checkbox>
-                    </TableBodyCell>
-                    <TableBodyCell>
-                        <Checkbox class="-mr-15 text-orange-500 dark:text-orange-500" bind:checked={isCheckedRCTRL} on:change={(event) => renewModifiers(event, 0)}>CTRL</Checkbox>
-                    </TableBodyCell>
+                    <TableBodyRow>
+                        <TableBodyCell>
+                            <Checkbox class="-mr-10" bind:checked={isCheckedLGUI}
+                                      on:change={(event) => renewModifiers(event, 7)}>GUI
+                            </Checkbox>
+                        </TableBodyCell>
+                        <TableBodyCell>
+                            <Checkbox class="-mr-10" bind:checked={isCheckedLALT}
+                                      on:change={(event) => renewModifiers(event, 6)}>ALT
+                            </Checkbox>
+                        </TableBodyCell>
+                        <TableBodyCell>
+                            <Checkbox class="-mr-10" bind:checked={isCheckedRSHIFT}
+                                      on:change={(event) => renewModifiers(event, 5)}>SHIFT
+                            </Checkbox>
+                        </TableBodyCell>
+                        <TableBodyCell>
+                            <Checkbox class="-mr-10" bind:checked={isCheckedLCTRL}
+                                      on:change={(event) => renewModifiers(event, 4)}>CTRL
+                            </Checkbox>
+                        </TableBodyCell>
+                        <TableBodyCell>
+                            <Checkbox class="-mr-10" bind:checked={isCheckedRGUI}
+                                      on:change={(event) => renewModifiers(event, 3)}>GUI
+                            </Checkbox>
+                        </TableBodyCell>
+                        <TableBodyCell>
+                            <Checkbox class="-mr-10" bind:checked={isCheckedRALT}
+                                      on:change={(event) => renewModifiers(event, 2)}>ALT
+                            </Checkbox>
+                        </TableBodyCell>
+                        <TableBodyCell>
+                            <Checkbox class="-mr-10" bind:checked={isCheckedRSHIFT}
+                                      on:change={(event) => renewModifiers(event, 1)}>SHIFT
+                            </Checkbox>
+                        </TableBodyCell>
+                        <TableBodyCell>
+                            <Checkbox class="-mr-15" bind:checked={isCheckedRCTRL}
+                                      on:change={(event) => renewModifiers(event, 0)}>CTRL
+                            </Checkbox>
+                        </TableBodyCell>
+                    </TableBodyRow>
                 </TableBody>
             </Table>
 
         </TabItem>
         <TabItem title="Stick">
-
+            <Table>
+                <TableBodyRow>
+                    <TableBodyCell>
+                        <RadioButton value="0" bind:group={directionGroup} size="sm" class="w-12 h-12 mx-1 my-1"
+                                     on:change={selectKey}>
+                            <ArrowUpOutline class="-rotate-45"/>
+                        </RadioButton>
+                        <RadioButton value="1" bind:group={directionGroup} size="sm" class="w-12 h-12 mx-1 my-1"
+                                     on:change={selectKey}>
+                            <ArrowUpOutline/>
+                        </RadioButton>
+                        <RadioButton value="2" bind:group={directionGroup} size="sm" class="w-12 h-12 mx-1 my-1"
+                                     on:change={selectKey}>
+                            <ArrowUpOutline class="rotate-45"/>
+                        </RadioButton>
+                        <br>
+                        <RadioButton value="3" bind:group={directionGroup} size="sm" class="w-12 h-12 mx-1 my-1"
+                                     on:change={selectKey}>
+                            <ArrowLeftOutline/>
+                        </RadioButton>
+                        <RadioButton value="4" bind:group={directionGroup} size="sm" class="w-12 h-12 mx-1 my-1"
+                                     disabled>
+                            <CogOutline/>
+                        </RadioButton>
+                        <RadioButton value="5" bind:group={directionGroup} size="sm" class="w-12 h-12 mx-1 my-1"
+                                     on:change={selectKey}>
+                            <ArrowRightOutline/>
+                        </RadioButton>
+                        <br>
+                        <RadioButton value="6" bind:group={directionGroup} size="sm" class="w-12 h-12 mx-1 my-1"
+                                     on:change={selectKey}>
+                            <ArrowDownOutline class="rotate-45"/>
+                        </RadioButton>
+                        <RadioButton value="7" bind:group={directionGroup} size="sm" class="w-12 h-12 mx-1 my-1"
+                                     on:change={selectKey}>
+                            <ArrowDownOutline/>
+                        </RadioButton>
+                        <RadioButton value="8" bind:group={directionGroup} size="sm" class="w-12 h-12 mx-1 my-1"
+                                     on:change={selectKey}>
+                            <ArrowDownOutline class="-rotate-45"/>
+                        </RadioButton>
+                    </TableBodyCell>
+                    <TableBodyCell>
+                        <Button>Select keycode
+                            <ChevronRightOutline class="w-6 h-6 ms-2 text-white dark:text-white"/>
+                        </Button>
+                        <Dropdown class="overflow-y-auto py-1 h-48" placement="right" bind:open={dropdownOpen}>
+                            {#each allKeyMaps as keymap}
+                                <DropdownItem on:click={renewKeycode}>{@html keymap.name}</DropdownItem>
+                            {/each}
+                        </Dropdown>
+                        <br>
+                        <Table shadow>
+                            <TableBody>
+                                <TableBodyRow>
+                                    <TableBodyCell>
+                                        <Label>L:</Label>
+                                    </TableBodyCell>
+                                    <TableBodyCell>
+                                        <Checkbox bind:checked={isCheckedLGUI}
+                                                  on:change={(event) => renewModifiers(event, 7)}>GUI
+                                        </Checkbox>
+                                    </TableBodyCell>
+                                    <TableBodyCell>
+                                        <Checkbox bind:checked={isCheckedLALT}
+                                                  on:change={(event) => renewModifiers(event, 6)}>ALT
+                                        </Checkbox>
+                                    </TableBodyCell>
+                                    <TableBodyCell>
+                                        <Checkbox bind:checked={isCheckedRSHIFT}
+                                                  on:change={(event) => renewModifiers(event, 5)}>SHIFT
+                                        </Checkbox>
+                                    </TableBodyCell>
+                                    <TableBodyCell>
+                                        <Checkbox bind:checked={isCheckedLCTRL}
+                                                  on:change={(event) => renewModifiers(event, 4)}>CTRL
+                                        </Checkbox>
+                                    </TableBodyCell>
+                                </TableBodyRow>
+                                <TableBodyRow>
+                                    <TableBodyCell>
+                                        <Label>R:</Label>
+                                    </TableBodyCell>
+                                    <TableBodyCell>
+                                        <Checkbox bind:checked={isCheckedRGUI}
+                                                  on:change={(event) => renewModifiers(event, 3)}>GUI
+                                        </Checkbox>
+                                    </TableBodyCell>
+                                    <TableBodyCell>
+                                        <Checkbox bind:checked={isCheckedRALT}
+                                                  on:change={(event) => renewModifiers(event, 2)}>ALT
+                                        </Checkbox>
+                                    </TableBodyCell>
+                                    <TableBodyCell>
+                                        <Checkbox bind:checked={isCheckedRSHIFT}
+                                                  on:change={(event) => renewModifiers(event, 1)}>SHIFT
+                                        </Checkbox>
+                                    </TableBodyCell>
+                                    <TableBodyCell>
+                                        <Checkbox bind:checked={isCheckedRCTRL}
+                                                  on:change={(event) => renewModifiers(event, 0)}>CTRL
+                                        </Checkbox>
+                                    </TableBodyCell>
+                                </TableBodyRow>
+                            </TableBody>
+                        </Table>
+                    </TableBodyCell>
+                </TableBodyRow>
+            </Table>
         </TabItem>
     </Tabs>
 </main>
@@ -379,9 +509,7 @@
     :root {
         font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
         Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        background-color: rgba(27, 38, 54, 1);
         text-align: center;
-        color: white;
     }
 
     main {
@@ -390,13 +518,6 @@
         margin: 0 auto;
         height: 100vh;
     }
-
-    p {
-        max-width: 14rem;
-        margin: 1rem auto;
-        line-height: 1.35;
-    }
-
 
     @font-face {
         font-family: "Nunito";
