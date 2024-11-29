@@ -33,6 +33,8 @@
     let radioGroup = "";
     let directionGroup = "";
 
+    let selectedSettingTab = 0;
+
     let allKeyMaps = [
         {value: " ", name: '&nbsp;'},
         {value: "A", name: "A"},
@@ -159,11 +161,39 @@
         [0b00000000, 0b10000000, 0b01000000, 0b00000000, 0b00010000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000]
     ];
 
+    let stk1Keys = [
+        ['Upper', 'Upper', ''],
+        ['Backspace', '', 'Tab'],
+        ['', 'Enter', ''],
+    ];
+
+    let stk1Modifiers = [
+        [0b00100000, 0b00000000, 0b00000000],
+        [0b00000000, 0b00000000, 0b00000000],
+        [0b00000000, 0b00000000, 0b00000000],
+    ];
+
+    let stk2Keys = [
+        ['', '', 'Upper'],
+        ['Delete', '', 'Space'],
+        ['', 'Escape', 'Space'],
+    ];
+
+    let stk2Modifiers = [
+        [0b00000000, 0b00000010, 0b00000010],
+        [0b00000000, 0b00000000, 0b00000000],
+        [0b00000000, 0b00000000, 0b00000010],
+    ];
+
     let selectedLayoutIndex = 0;
 
     let dropdownOpen = false;
     let selectedRow = 0;
     let selectedCol = 0;
+
+    let stkDropdownOpen = false;
+    let selectedDirectionRow = 0;
+    let selectedDirectionCol = 0;
 
     let isCheckedLGUI = false;
     let isCheckedLALT = false;
@@ -184,6 +214,12 @@
         selectedRow = Math.floor(val / 10);
         //alert(`${event.target.value} val: ${val}, row: ${selectedRow}, col: ${selectedCol}`);
 
+        if (selectedRow === 3 && (selectedCol === 3 || selectedCol === 5)) {
+            selectedSettingTab = 1;
+        } else {
+            selectedSettingTab = 0;
+        }
+
         switch (selectedLayoutIndex) {
             case 0:
                 isCheckedRCTRL = !!(normalModifiers1[selectedRow][selectedCol] & 0b00000001);
@@ -198,6 +234,34 @@
             case 1:
                 alert(upperLayout1[selectedRow][selectedCol]);
                 break;
+        }
+    }
+
+    function selectDirection(event) {
+        let val = parseInt(event.target.value);
+        selectedDirectionCol = val % 3;
+        selectedDirectionRow = Math.floor(val / 3);
+        //alert(`${event.target.value} val: ${val}, row: ${selectedRow}, col: ${selectedCol}`);
+
+        if (selectedRow === 3 && selectedCol === 3) {
+            isCheckedRCTRL = !!(stk1Modifiers[selectedDirectionRow][selectedDirectionCol] & 0b00000001);
+            isCheckedRSHIFT = !!((stk1Modifiers[selectedDirectionRow][selectedDirectionCol] >> 1) & 0b00000001);
+            isCheckedRALT = !!((stk1Modifiers[selectedDirectionRow][selectedDirectionCol] >> 2) & 0b00000001);
+            isCheckedRGUI = !!((stk1Modifiers[selectedDirectionRow][selectedDirectionCol] >> 3) & 0b00000001);
+            isCheckedLCTRL = !!((stk1Modifiers[selectedDirectionRow][selectedDirectionCol] >> 4) & 0b00000001);
+            isCheckedLSHIFT = !!((stk1Modifiers[selectedDirectionRow][selectedDirectionCol] >> 5) & 0b00000001);
+            isCheckedLALT = !!((stk1Modifiers[selectedDirectionRow][selectedDirectionCol] >> 6) & 0b00000001);
+            isCheckedLGUI = !!((stk1Modifiers[selectedDirectionRow][selectedDirectionCol] >> 7) & 0b00000001);
+        } else if (selectedRow === 3 && selectedCol === 5) {
+            isCheckedRCTRL = !!(stk2Modifiers[selectedDirectionRow][selectedDirectionCol] & 0b00000001);
+            isCheckedRSHIFT = !!((stk2Modifiers[selectedDirectionRow][selectedDirectionCol] >> 1) & 0b00000001);
+            isCheckedRALT = !!((stk2Modifiers[selectedDirectionRow][selectedDirectionCol] >> 2) & 0b00000001);
+            isCheckedRGUI = !!((stk2Modifiers[selectedDirectionRow][selectedDirectionCol] >> 3) & 0b00000001);
+            isCheckedLCTRL = !!((stk2Modifiers[selectedDirectionRow][selectedDirectionCol] >> 4) & 0b00000001);
+            isCheckedLSHIFT = !!((stk2Modifiers[selectedDirectionRow][selectedDirectionCol] >> 5) & 0b00000001);
+            isCheckedLALT = !!((stk2Modifiers[selectedDirectionRow][selectedDirectionCol] >> 6) & 0b00000001);
+            isCheckedLGUI = !!((stk2Modifiers[selectedDirectionRow][selectedDirectionCol] >> 7) & 0b00000001);
+
         }
     }
 
@@ -226,6 +290,16 @@
             }
 
         }
+    }
+
+    function renewStkKeycode(event) {
+        if (selectedRow === 3 && selectedCol === 3) {
+            stk1Keys[selectedDirectionRow][selectedDirectionCol] = event.target.textContent;
+        } else if (selectedRow === 3 && selectedCol === 5) {
+            stk2Keys[selectedDirectionRow][selectedDirectionCol] = event.target.textContent;
+        }
+
+        dropdownOpen = false;
     }
 
     function isDisabled(row, col) {
@@ -326,7 +400,7 @@
 
     <br>
     <Tabs>
-        <TabItem open title="Key">
+        <TabItem open={selectedSettingTab === 0} title="Key" disabled>
             <Button>Select keycode
                 <ChevronRightOutline class="w-6 h-6 ms-2 text-white dark:text-white"/>
             </Button>
@@ -391,116 +465,115 @@
             </Table>
 
         </TabItem>
-        <TabItem title="Stick">
-            <Table>
-                <TableBodyRow>
-                    <TableBodyCell>
-                        <RadioButton value="0" bind:group={directionGroup} size="sm" class="w-12 h-12 mx-1 my-1"
-                                     on:change={selectKey}>
-                            <ArrowUpOutline class="-rotate-45"/>
-                        </RadioButton>
-                        <RadioButton value="1" bind:group={directionGroup} size="sm" class="w-12 h-12 mx-1 my-1"
-                                     on:change={selectKey}>
-                            <ArrowUpOutline/>
-                        </RadioButton>
-                        <RadioButton value="2" bind:group={directionGroup} size="sm" class="w-12 h-12 mx-1 my-1"
-                                     on:change={selectKey}>
-                            <ArrowUpOutline class="rotate-45"/>
-                        </RadioButton>
-                        <br>
-                        <RadioButton value="3" bind:group={directionGroup} size="sm" class="w-12 h-12 mx-1 my-1"
-                                     on:change={selectKey}>
-                            <ArrowLeftOutline/>
-                        </RadioButton>
-                        <RadioButton value="4" bind:group={directionGroup} size="sm" class="w-12 h-12 mx-1 my-1"
-                                     disabled>
-                            <CogOutline/>
-                        </RadioButton>
-                        <RadioButton value="5" bind:group={directionGroup} size="sm" class="w-12 h-12 mx-1 my-1"
-                                     on:change={selectKey}>
-                            <ArrowRightOutline/>
-                        </RadioButton>
-                        <br>
-                        <RadioButton value="6" bind:group={directionGroup} size="sm" class="w-12 h-12 mx-1 my-1"
-                                     on:change={selectKey}>
-                            <ArrowDownOutline class="rotate-45"/>
-                        </RadioButton>
-                        <RadioButton value="7" bind:group={directionGroup} size="sm" class="w-12 h-12 mx-1 my-1"
-                                     on:change={selectKey}>
-                            <ArrowDownOutline/>
-                        </RadioButton>
-                        <RadioButton value="8" bind:group={directionGroup} size="sm" class="w-12 h-12 mx-1 my-1"
-                                     on:change={selectKey}>
-                            <ArrowDownOutline class="-rotate-45"/>
-                        </RadioButton>
-                    </TableBodyCell>
-                    <TableBodyCell>
-                        <Button>Select keycode
-                            <ChevronRightOutline class="w-6 h-6 ms-2 text-white dark:text-white"/>
-                        </Button>
-                        <Dropdown class="overflow-y-auto py-1 h-48" placement="right" bind:open={dropdownOpen}>
-                            {#each allKeyMaps as keymap}
-                                <DropdownItem on:click={renewKeycode}>{@html keymap.name}</DropdownItem>
-                            {/each}
-                        </Dropdown>
-                        <br>
-                        <Table shadow>
-                            <TableBody>
-                                <TableBodyRow>
-                                    <TableBodyCell>
-                                        <Label>L:</Label>
-                                    </TableBodyCell>
-                                    <TableBodyCell>
-                                        <Checkbox bind:checked={isCheckedLGUI}
-                                                  on:change={(event) => renewModifiers(event, 7)}>GUI
-                                        </Checkbox>
-                                    </TableBodyCell>
-                                    <TableBodyCell>
-                                        <Checkbox bind:checked={isCheckedLALT}
-                                                  on:change={(event) => renewModifiers(event, 6)}>ALT
-                                        </Checkbox>
-                                    </TableBodyCell>
-                                    <TableBodyCell>
-                                        <Checkbox bind:checked={isCheckedRSHIFT}
-                                                  on:change={(event) => renewModifiers(event, 5)}>SHIFT
-                                        </Checkbox>
-                                    </TableBodyCell>
-                                    <TableBodyCell>
-                                        <Checkbox bind:checked={isCheckedLCTRL}
-                                                  on:change={(event) => renewModifiers(event, 4)}>CTRL
-                                        </Checkbox>
-                                    </TableBodyCell>
-                                </TableBodyRow>
-                                <TableBodyRow>
-                                    <TableBodyCell>
-                                        <Label>R:</Label>
-                                    </TableBodyCell>
-                                    <TableBodyCell>
-                                        <Checkbox bind:checked={isCheckedRGUI}
-                                                  on:change={(event) => renewModifiers(event, 3)}>GUI
-                                        </Checkbox>
-                                    </TableBodyCell>
-                                    <TableBodyCell>
-                                        <Checkbox bind:checked={isCheckedRALT}
-                                                  on:change={(event) => renewModifiers(event, 2)}>ALT
-                                        </Checkbox>
-                                    </TableBodyCell>
-                                    <TableBodyCell>
-                                        <Checkbox bind:checked={isCheckedRSHIFT}
-                                                  on:change={(event) => renewModifiers(event, 1)}>SHIFT
-                                        </Checkbox>
-                                    </TableBodyCell>
-                                    <TableBodyCell>
-                                        <Checkbox bind:checked={isCheckedRCTRL}
-                                                  on:change={(event) => renewModifiers(event, 0)}>CTRL
-                                        </Checkbox>
-                                    </TableBodyCell>
-                                </TableBodyRow>
-                            </TableBody>
-                        </Table>
-                    </TableBodyCell>
-                </TableBodyRow>
-            </Table>
+        <TabItem open={selectedSettingTab === 1} title="Stick" disabled>
+            <div class="flex space-x-10">
+                <div>
+                    <RadioButton value="0" bind:group={directionGroup} size="sm" class="w-12 h-12 mx-1 my-1"
+                                 on:change={selectDirection}>
+                        <ArrowUpOutline class="-rotate-45"/>
+                    </RadioButton>
+                    <RadioButton value="1" bind:group={directionGroup} size="sm" class="w-12 h-12 mx-1 my-1"
+                                 on:change={selectDirection}>
+                        <ArrowUpOutline/>
+                    </RadioButton>
+                    <RadioButton value="2" bind:group={directionGroup} size="sm" class="w-12 h-12 mx-1 my-1"
+                                 on:change={selectDirection}>
+                        <ArrowUpOutline class="rotate-45"/>
+                    </RadioButton>
+                    <br>
+                    <RadioButton value="3" bind:group={directionGroup} size="sm" class="w-12 h-12 mx-1 my-1"
+                                 on:change={selectDirection}>
+                        <ArrowLeftOutline/>
+                    </RadioButton>
+                    <RadioButton value="4" bind:group={directionGroup} size="sm" class="w-12 h-12 mx-1 my-1"
+                                 disabled>
+                        <CogOutline/>
+                    </RadioButton>
+                    <RadioButton value="5" bind:group={directionGroup} size="sm" class="w-12 h-12 mx-1 my-1"
+                                 on:change={selectDirection}>
+                        <ArrowRightOutline/>
+                    </RadioButton>
+                    <br>
+                    <RadioButton value="6" bind:group={directionGroup} size="sm" class="w-12 h-12 mx-1 my-1"
+                                 on:change={selectDirection}>
+                        <ArrowDownOutline class="rotate-45"/>
+                    </RadioButton>
+                    <RadioButton value="7" bind:group={directionGroup} size="sm" class="w-12 h-12 mx-1 my-1"
+                                 on:change={selectDirection}>
+                        <ArrowDownOutline/>
+                    </RadioButton>
+                    <RadioButton value="8" bind:group={directionGroup} size="sm" class="w-12 h-12 mx-1 my-1"
+                                 on:change={selectDirection}>
+                        <ArrowDownOutline class="-rotate-45"/>
+                    </RadioButton>
+                </div>
+                <div>
+                    <Button>Select keycode
+                        <ChevronRightOutline class="w-6 h-6 ms-2 text-white dark:text-white"/>
+                    </Button>
+                    <Dropdown class="overflow-y-auto py-1 h-48" placement="right" bind:open={stkDropdownOpen}>
+                        {#each allKeyMaps as keymap}
+                            <DropdownItem on:click={renewStkKeycode}>{@html keymap.name}</DropdownItem>
+                        {/each}
+                    </Dropdown>
+                    <br>
+                    <br>
+                    <Table shadow>
+                        <TableBody>
+                            <TableBodyRow>
+                                <TableBodyCell>
+                                    <Label>L:</Label>
+                                </TableBodyCell>
+                                <TableBodyCell>
+                                    <Checkbox bind:checked={isCheckedLGUI}
+                                              on:change={(event) => renewModifiers(event, 7)}>GUI
+                                    </Checkbox>
+                                </TableBodyCell>
+                                <TableBodyCell>
+                                    <Checkbox bind:checked={isCheckedLALT}
+                                              on:change={(event) => renewModifiers(event, 6)}>ALT
+                                    </Checkbox>
+                                </TableBodyCell>
+                                <TableBodyCell>
+                                    <Checkbox bind:checked={isCheckedRSHIFT}
+                                              on:change={(event) => renewModifiers(event, 5)}>SHIFT
+                                    </Checkbox>
+                                </TableBodyCell>
+                                <TableBodyCell>
+                                    <Checkbox bind:checked={isCheckedLCTRL}
+                                              on:change={(event) => renewModifiers(event, 4)}>CTRL
+                                    </Checkbox>
+                                </TableBodyCell>
+                            </TableBodyRow>
+                            <TableBodyRow>
+                                <TableBodyCell>
+                                    <Label>R:</Label>
+                                </TableBodyCell>
+                                <TableBodyCell>
+                                    <Checkbox bind:checked={isCheckedRGUI}
+                                              on:change={(event) => renewModifiers(event, 3)}>GUI
+                                    </Checkbox>
+                                </TableBodyCell>
+                                <TableBodyCell>
+                                    <Checkbox bind:checked={isCheckedRALT}
+                                              on:change={(event) => renewModifiers(event, 2)}>ALT
+                                    </Checkbox>
+                                </TableBodyCell>
+                                <TableBodyCell>
+                                    <Checkbox bind:checked={isCheckedRSHIFT}
+                                              on:change={(event) => renewModifiers(event, 1)}>SHIFT
+                                    </Checkbox>
+                                </TableBodyCell>
+                                <TableBodyCell>
+                                    <Checkbox bind:checked={isCheckedRCTRL}
+                                              on:change={(event) => renewModifiers(event, 0)}>CTRL
+                                    </Checkbox>
+                                </TableBodyCell>
+                            </TableBodyRow>
+                        </TableBody>
+                    </Table>
+                </div>
+            </div>
         </TabItem>
     </Tabs>
 </main>
