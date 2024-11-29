@@ -25,9 +25,9 @@ func main() {
 	// Create application with options
 	err := wails.Run(&options.App{
 		Title:             "Confiseur2",
-		Width:             800,
+		Width:             820,
 		Height:            768,
-		MinWidth:          800,
+		MinWidth:          820,
 		MinHeight:         768,
 		MaxWidth:          1280,
 		MaxHeight:         800,
