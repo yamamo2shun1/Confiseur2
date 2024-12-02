@@ -194,6 +194,8 @@
     let stkDropdownOpen = false;
     let selectedDirectionRow = 0;
     let selectedDirectionCol = 0;
+    let currentStkKeycode = "";
+    let isDisabledStkDropdown = true;
 
     let isCheckedLGUI = false;
     let isCheckedLALT = false;
@@ -216,12 +218,16 @@
 
         if (selectedRow === 3 && (selectedCol === 3 || selectedCol === 5)) {
             selectedSettingTab = 1;
+            directionGroup = "";
         } else {
             selectedSettingTab = 0;
         }
 
         switch (selectedLayoutIndex) {
             case 0:
+                isDisabledStkDropdown = true;
+                currentStkKeycode = "";
+
                 isCheckedRCTRL = !!(normalModifiers1[selectedRow][selectedCol] & 0b00000001);
                 isCheckedRSHIFT = !!((normalModifiers1[selectedRow][selectedCol] >> 1) & 0b00000001);
                 isCheckedRALT = !!((normalModifiers1[selectedRow][selectedCol] >> 2) & 0b00000001);
@@ -232,7 +238,17 @@
                 isCheckedLGUI = !!((normalModifiers1[selectedRow][selectedCol] >> 7) & 0b00000001);
                 break;
             case 1:
-                alert(upperLayout1[selectedRow][selectedCol]);
+                isDisabledStkDropdown = true;
+                currentStkKeycode = "";
+
+                isCheckedRCTRL = !!(upperModifiers1[selectedRow][selectedCol] & 0b00000001);
+                isCheckedRSHIFT = !!((upperModifiers1[selectedRow][selectedCol] >> 1) & 0b00000001);
+                isCheckedRALT = !!((upperModifiers1[selectedRow][selectedCol] >> 2) & 0b00000001);
+                isCheckedRGUI = !!((upperModifiers1[selectedRow][selectedCol] >> 3) & 0b00000001);
+                isCheckedLCTRL = !!((upperModifiers1[selectedRow][selectedCol] >> 4) & 0b00000001);
+                isCheckedLSHIFT = !!((upperModifiers1[selectedRow][selectedCol] >> 5) & 0b00000001);
+                isCheckedLALT = !!((upperModifiers1[selectedRow][selectedCol] >> 6) & 0b00000001);
+                isCheckedLGUI = !!((upperModifiers1[selectedRow][selectedCol] >> 7) & 0b00000001);
                 break;
         }
     }
@@ -244,6 +260,8 @@
         //alert(`${event.target.value} val: ${val}, row: ${selectedRow}, col: ${selectedCol}`);
 
         if (selectedRow === 3 && selectedCol === 3) {
+            currentStkKeycode = stk1Keys[selectedDirectionRow][selectedDirectionCol];
+
             isCheckedRCTRL = !!(stk1Modifiers[selectedDirectionRow][selectedDirectionCol] & 0b00000001);
             isCheckedRSHIFT = !!((stk1Modifiers[selectedDirectionRow][selectedDirectionCol] >> 1) & 0b00000001);
             isCheckedRALT = !!((stk1Modifiers[selectedDirectionRow][selectedDirectionCol] >> 2) & 0b00000001);
@@ -253,6 +271,8 @@
             isCheckedLALT = !!((stk1Modifiers[selectedDirectionRow][selectedDirectionCol] >> 6) & 0b00000001);
             isCheckedLGUI = !!((stk1Modifiers[selectedDirectionRow][selectedDirectionCol] >> 7) & 0b00000001);
         } else if (selectedRow === 3 && selectedCol === 5) {
+            currentStkKeycode = stk2Keys[selectedDirectionRow][selectedDirectionCol];
+
             isCheckedRCTRL = !!(stk2Modifiers[selectedDirectionRow][selectedDirectionCol] & 0b00000001);
             isCheckedRSHIFT = !!((stk2Modifiers[selectedDirectionRow][selectedDirectionCol] >> 1) & 0b00000001);
             isCheckedRALT = !!((stk2Modifiers[selectedDirectionRow][selectedDirectionCol] >> 2) & 0b00000001);
@@ -263,6 +283,8 @@
             isCheckedLGUI = !!((stk2Modifiers[selectedDirectionRow][selectedDirectionCol] >> 7) & 0b00000001);
 
         }
+
+        isDisabledStkDropdown = false;
     }
 
     function renewKeycode(event) {
@@ -299,7 +321,9 @@
             stk2Keys[selectedDirectionRow][selectedDirectionCol] = event.target.textContent;
         }
 
-        dropdownOpen = false;
+        currentStkKeycode = event.target.textContent;
+
+        stkDropdownOpen = false;
     }
 
     function isDisabled(row, col) {
@@ -508,15 +532,23 @@
                     </RadioButton>
                 </div>
                 <div>
-                    <Button>Select keycode
-                        <ChevronRightOutline class="w-6 h-6 ms-2 text-white dark:text-white"/>
-                    </Button>
-                    <Dropdown class="overflow-y-auto py-1 h-48" placement="right" bind:open={stkDropdownOpen}>
-                        {#each allKeyMaps as keymap}
-                            <DropdownItem on:click={renewStkKeycode}>{@html keymap.name}</DropdownItem>
-                        {/each}
-                    </Dropdown>
-                    <br>
+                    <div class="flex space-x-10">
+                        <div>
+                            <Button disabled={isDisabledStkDropdown}>Select keycode
+                                <ChevronRightOutline class="w-6 h-6 ms-2 text-white dark:text-white"/>
+                            </Button>
+                            <Dropdown class="overflow-y-auto py-1 h-48" placement="right" bind:open={stkDropdownOpen}>
+                                {#each allKeyMaps as keymap}
+                                    <DropdownItem on:click={renewStkKeycode}>{@html keymap.name}</DropdownItem>
+                                {/each}
+                            </Dropdown>
+                        </div>
+                        <div>
+                            <Label class="mt-3">
+                                Current Keycode : {currentStkKeycode}
+                            </Label>
+                        </div>
+                    </div>
                     <br>
                     <Table shadow>
                         <TableBody>
