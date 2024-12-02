@@ -206,6 +206,15 @@
     let isCheckedRSHIFT = false;
     let isCheckedRCTRL = false;
 
+    let isStkCheckedLGUI = false;
+    let isStkCheckedLALT = false;
+    let isStkCheckedLSHIFT = false;
+    let isStkCheckedLCTRL = false;
+    let isStkCheckedRGUI = false;
+    let isStkCheckedRALT = false;
+    let isStkCheckedRSHIFT = false;
+    let isStkCheckedRCTRL = false;
+
     function selectLayout(event, index) {
         selectedLayoutIndex = index;
     }
@@ -219,6 +228,15 @@
         if (selectedRow === 3 && (selectedCol === 3 || selectedCol === 5)) {
             selectedSettingTab = 1;
             directionGroup = "";
+
+            isStkCheckedLGUI = false;
+            isStkCheckedLALT = false;
+            isStkCheckedLSHIFT = false;
+            isStkCheckedLSHIFT = false;
+            isStkCheckedRGUI = false;
+            isStkCheckedRALT = false;
+            isStkCheckedRSHIFT = false;
+            isStkCheckedRSHIFT = false;
         } else {
             selectedSettingTab = 0;
         }
@@ -262,25 +280,25 @@
         if (selectedRow === 3 && selectedCol === 3) {
             currentStkKeycode = stk1Keys[selectedDirectionRow][selectedDirectionCol];
 
-            isCheckedRCTRL = !!(stk1Modifiers[selectedDirectionRow][selectedDirectionCol] & 0b00000001);
-            isCheckedRSHIFT = !!((stk1Modifiers[selectedDirectionRow][selectedDirectionCol] >> 1) & 0b00000001);
-            isCheckedRALT = !!((stk1Modifiers[selectedDirectionRow][selectedDirectionCol] >> 2) & 0b00000001);
-            isCheckedRGUI = !!((stk1Modifiers[selectedDirectionRow][selectedDirectionCol] >> 3) & 0b00000001);
-            isCheckedLCTRL = !!((stk1Modifiers[selectedDirectionRow][selectedDirectionCol] >> 4) & 0b00000001);
-            isCheckedLSHIFT = !!((stk1Modifiers[selectedDirectionRow][selectedDirectionCol] >> 5) & 0b00000001);
-            isCheckedLALT = !!((stk1Modifiers[selectedDirectionRow][selectedDirectionCol] >> 6) & 0b00000001);
-            isCheckedLGUI = !!((stk1Modifiers[selectedDirectionRow][selectedDirectionCol] >> 7) & 0b00000001);
+            isStkCheckedRCTRL = !!(stk1Modifiers[selectedDirectionRow][selectedDirectionCol] & 0b00000001);
+            isStkCheckedRSHIFT = !!((stk1Modifiers[selectedDirectionRow][selectedDirectionCol] >> 1) & 0b00000001);
+            isStkCheckedRALT = !!((stk1Modifiers[selectedDirectionRow][selectedDirectionCol] >> 2) & 0b00000001);
+            isStkCheckedRGUI = !!((stk1Modifiers[selectedDirectionRow][selectedDirectionCol] >> 3) & 0b00000001);
+            isStkCheckedLCTRL = !!((stk1Modifiers[selectedDirectionRow][selectedDirectionCol] >> 4) & 0b00000001);
+            isStkCheckedLSHIFT = !!((stk1Modifiers[selectedDirectionRow][selectedDirectionCol] >> 5) & 0b00000001);
+            isStkCheckedLALT = !!((stk1Modifiers[selectedDirectionRow][selectedDirectionCol] >> 6) & 0b00000001);
+            isStkCheckedLGUI = !!((stk1Modifiers[selectedDirectionRow][selectedDirectionCol] >> 7) & 0b00000001);
         } else if (selectedRow === 3 && selectedCol === 5) {
             currentStkKeycode = stk2Keys[selectedDirectionRow][selectedDirectionCol];
 
-            isCheckedRCTRL = !!(stk2Modifiers[selectedDirectionRow][selectedDirectionCol] & 0b00000001);
-            isCheckedRSHIFT = !!((stk2Modifiers[selectedDirectionRow][selectedDirectionCol] >> 1) & 0b00000001);
-            isCheckedRALT = !!((stk2Modifiers[selectedDirectionRow][selectedDirectionCol] >> 2) & 0b00000001);
-            isCheckedRGUI = !!((stk2Modifiers[selectedDirectionRow][selectedDirectionCol] >> 3) & 0b00000001);
-            isCheckedLCTRL = !!((stk2Modifiers[selectedDirectionRow][selectedDirectionCol] >> 4) & 0b00000001);
-            isCheckedLSHIFT = !!((stk2Modifiers[selectedDirectionRow][selectedDirectionCol] >> 5) & 0b00000001);
-            isCheckedLALT = !!((stk2Modifiers[selectedDirectionRow][selectedDirectionCol] >> 6) & 0b00000001);
-            isCheckedLGUI = !!((stk2Modifiers[selectedDirectionRow][selectedDirectionCol] >> 7) & 0b00000001);
+            isStkCheckedRCTRL = !!(stk2Modifiers[selectedDirectionRow][selectedDirectionCol] & 0b00000001);
+            isStkCheckedRSHIFT = !!((stk2Modifiers[selectedDirectionRow][selectedDirectionCol] >> 1) & 0b00000001);
+            isStkCheckedRALT = !!((stk2Modifiers[selectedDirectionRow][selectedDirectionCol] >> 2) & 0b00000001);
+            isStkCheckedRGUI = !!((stk2Modifiers[selectedDirectionRow][selectedDirectionCol] >> 3) & 0b00000001);
+            isStkCheckedLCTRL = !!((stk2Modifiers[selectedDirectionRow][selectedDirectionCol] >> 4) & 0b00000001);
+            isStkCheckedLSHIFT = !!((stk2Modifiers[selectedDirectionRow][selectedDirectionCol] >> 5) & 0b00000001);
+            isStkCheckedLALT = !!((stk2Modifiers[selectedDirectionRow][selectedDirectionCol] >> 6) & 0b00000001);
+            isStkCheckedLGUI = !!((stk2Modifiers[selectedDirectionRow][selectedDirectionCol] >> 7) & 0b00000001);
 
         }
 
@@ -324,6 +342,23 @@
         currentStkKeycode = event.target.textContent;
 
         stkDropdownOpen = false;
+    }
+
+    function renewStkModifiers(event, index) {
+        if (selectedRow === 3 && selectedCol === 3) {
+            if (event.target.checked) {
+                stk1Modifiers[selectedDirectionRow][selectedDirectionCol] |= 0b00000001 << index;
+            } else {
+                stk1Modifiers[selectedDirectionRow][selectedDirectionCol] &= ~(0b00000001 << index);
+            }
+        } else if (selectedRow === 3 && selectedCol === 5) {
+            if (event.target.checked) {
+                stk2Modifiers[selectedDirectionRow][selectedDirectionCol] |= 0b00000001 << index;
+            } else {
+                stk2Modifiers[selectedDirectionRow][selectedDirectionCol] &= ~(0b00000001 << index);
+            }
+
+        }
     }
 
     function isDisabled(row, col) {
@@ -557,23 +592,23 @@
                                     <Label>L:</Label>
                                 </TableBodyCell>
                                 <TableBodyCell>
-                                    <Checkbox bind:checked={isCheckedLGUI}
-                                              on:change={(event) => renewModifiers(event, 7)}>GUI
+                                    <Checkbox bind:checked={isStkCheckedLGUI}
+                                              on:change={(event) => renewStkModifiers(event, 7)}>GUI
                                     </Checkbox>
                                 </TableBodyCell>
                                 <TableBodyCell>
-                                    <Checkbox bind:checked={isCheckedLALT}
-                                              on:change={(event) => renewModifiers(event, 6)}>ALT
+                                    <Checkbox bind:checked={isStkCheckedLALT}
+                                              on:change={(event) => renewStkModifiers(event, 6)}>ALT
                                     </Checkbox>
                                 </TableBodyCell>
                                 <TableBodyCell>
-                                    <Checkbox bind:checked={isCheckedRSHIFT}
-                                              on:change={(event) => renewModifiers(event, 5)}>SHIFT
+                                    <Checkbox bind:checked={isStkCheckedLSHIFT}
+                                              on:change={(event) => renewStkModifiers(event, 5)}>SHIFT
                                     </Checkbox>
                                 </TableBodyCell>
                                 <TableBodyCell>
-                                    <Checkbox bind:checked={isCheckedLCTRL}
-                                              on:change={(event) => renewModifiers(event, 4)}>CTRL
+                                    <Checkbox bind:checked={isStkCheckedLCTRL}
+                                              on:change={(event) => renewStkModifiers(event, 4)}>CTRL
                                     </Checkbox>
                                 </TableBodyCell>
                             </TableBodyRow>
@@ -582,23 +617,23 @@
                                     <Label>R:</Label>
                                 </TableBodyCell>
                                 <TableBodyCell>
-                                    <Checkbox bind:checked={isCheckedRGUI}
-                                              on:change={(event) => renewModifiers(event, 3)}>GUI
+                                    <Checkbox bind:checked={isStkCheckedRGUI}
+                                              on:change={(event) => renewStkModifiers(event, 3)}>GUI
                                     </Checkbox>
                                 </TableBodyCell>
                                 <TableBodyCell>
-                                    <Checkbox bind:checked={isCheckedRALT}
-                                              on:change={(event) => renewModifiers(event, 2)}>ALT
+                                    <Checkbox bind:checked={isStkCheckedRALT}
+                                              on:change={(event) => renewStkModifiers(event, 2)}>ALT
                                     </Checkbox>
                                 </TableBodyCell>
                                 <TableBodyCell>
-                                    <Checkbox bind:checked={isCheckedRSHIFT}
-                                              on:change={(event) => renewModifiers(event, 1)}>SHIFT
+                                    <Checkbox bind:checked={isStkCheckedRSHIFT}
+                                              on:change={(event) => renewStkModifiers(event, 1)}>SHIFT
                                     </Checkbox>
                                 </TableBodyCell>
                                 <TableBodyCell>
-                                    <Checkbox bind:checked={isCheckedRCTRL}
-                                              on:change={(event) => renewModifiers(event, 0)}>CTRL
+                                    <Checkbox bind:checked={isStkCheckedRCTRL}
+                                              on:change={(event) => renewStkModifiers(event, 0)}>CTRL
                                     </Checkbox>
                                 </TableBodyCell>
                             </TableBodyRow>
