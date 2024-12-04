@@ -4,7 +4,9 @@
         Checkbox,
         Dropdown,
         DropdownItem,
+        Dropzone,
         Label,
+        Modal,
         RadioButton,
         TabItem,
         Table,
@@ -133,6 +135,8 @@
         {value: "L1/L2", name: "Layout Switch"},
     ]
 
+    let keytopMap = new Map(allKeyMaps.map(item => [item.name, item.value]));
+
     let normalLayout1 = [
         ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
         ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';:'],
@@ -214,6 +218,8 @@
     let isStkCheckedRALT = false;
     let isStkCheckedRSHIFT = false;
     let isStkCheckedRCTRL = false;
+
+    let clickOutsideImport = false;
 
     function selectLayout(event, index) {
         selectedLayoutIndex = index;
@@ -305,11 +311,11 @@
         isDisabledStkDropdown = false;
     }
 
-    function renewKeycode(event) {
+    function renewKeytop(event) {
         if (selectedLayoutIndex === 0) {
-            normalLayout1[selectedRow][selectedCol] = event.target.textContent;
+            normalLayout1[selectedRow][selectedCol] = keytopMap.get(event.target.textContent);
         } else if (selectedLayoutIndex === 1) {
-            upperLayout1[selectedRow][selectedCol] = event.target.textContent;
+            upperLayout1[selectedRow][selectedCol] = keytopMap.get(event.target.textContent);
         }
 
         dropdownOpen = false;
@@ -397,10 +403,92 @@
 
         return null;
     }
+
+    let value = [];
+    const dropHandle = (event) => {
+        value = [];
+        event.preventDefault();
+        if (event.dataTransfer.items) {
+            [...event.dataTransfer.items].forEach((item, i) => {
+                if (item.kind === 'file') {
+                    const file = item.getAsFile();
+                    value.push(file.name);
+                    value = value
+                }
+            });
+        } else {
+            [...event.dataTransfer.files].forEach((file, i) => {
+                value = file.name;
+            });
+        }
+    };
+
+    const handleChange = (event) => {
+        const files = event.target.files;
+        if (files.length > 0) {
+            value.push(files[0].name);
+            value = value;
+        }
+    };
+
+    const showFiles = (files) => {
+        if (files.length === 1) return files[0];
+        let concat = '';
+        files.map((file) => {
+            concat += file;
+            concat += ',';
+            concat += ' ';
+        });
+
+        if (concat.length > 40) concat = concat.slice(0, 40);
+        concat += '...';
+        return concat;
+    };
+
+   function saveFile() {
+       const blob = new Blob(["Hello, world!"], { type: "text/plain;charset=utf-8" });
+       const link = document.createElement("a");
+
+       link.href = URL.createObjectURL(blob);
+       link.download = "example.txt";
+       document.body.appendChild(link);
+       link.click();
+       document.body.removeChild(link);
+   }
 </script>
 
 <main class="dark bg-gray-700">
-    <Tabs class="border-gray-700">
+    <div class="flex space-x-1 float-end">
+        <div>
+            <Button outline on:click={() => (clickOutsideImport = true)}>Import</Button>
+        </div>
+        <div>
+            <Button outline on:click={saveFile}>Export</Button>
+        </div>
+    </div>
+
+    <Modal title="Import TOML file" bind:open={clickOutsideImport} autoclose outsideclose>
+        <Dropzone
+                id="dropzone"
+                on:drop={dropHandle}
+                on:dragover={(event) => {event.preventDefault();}}
+                on:change={handleChange}>
+            <svg aria-hidden="true" class="mb-3 w-10 h-10 text-gray-400" fill="none" stroke="currentColor"
+                 viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+            </svg>
+            {#if value.length === 0}
+                <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span
+                        class="font-semibold">Click to upload</span> or drag and drop</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">TOML</p>
+            {:else}
+                <p>{showFiles(value)}</p>
+            {/if}
+        </Dropzone>
+    </Modal>
+
+    <Tabs class="border-gray-700" tabStyle="underline">
         <TabItem open title="Normal" on:click={(event) => selectLayout(event, 0)}>
             {#each normalLayout1 as row, rowIndex}
                 {#each row as key, colIndex}
@@ -458,14 +546,14 @@
     <hr>
 
     <br>
-    <Tabs>
+    <Tabs tabStyle="underline">
         <TabItem open={selectedSettingTab === 0} title="Key" disabled>
             <Button>Select keycode
                 <ChevronRightOutline class="w-6 h-6 ms-2 text-white dark:text-white"/>
             </Button>
             <Dropdown class="overflow-y-auto py-1 h-48" placement="right" bind:open={dropdownOpen}>
                 {#each allKeyMaps as keymap}
-                    <DropdownItem on:click={renewKeycode}>{@html keymap.name}</DropdownItem>
+                    <DropdownItem on:click={renewKeytop}>{@html keymap.name}</DropdownItem>
                 {/each}
             </Dropdown>
             <br>
@@ -490,7 +578,7 @@
                             </Checkbox>
                         </TableBodyCell>
                         <TableBodyCell>
-                            <Checkbox class="-mr-10" bind:checked={isCheckedRSHIFT}
+                            <Checkbox class="-mr-10" bind:checked={isCheckedLSHIFT}
                                       on:change={(event) => renewModifiers(event, 5)}>SHIFT
                             </Checkbox>
                         </TableBodyCell>
