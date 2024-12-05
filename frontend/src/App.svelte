@@ -31,6 +31,7 @@
         VolumeDownOutline,
         VolumeUpOutline
     } from "flowbite-svelte-icons";
+    import {LogError, LogInfo} from "../wailsjs/runtime/runtime.js";
 
     let radioGroup = "";
     let directionGroup = "";
@@ -404,6 +405,39 @@
         return null;
     }
 
+    /*
+    function isValidTOML(content) {
+        try {
+            parse(content);
+            return true;
+        } catch (error) {
+            LogError('Invalid TOML data: ' + error.message);
+            return false;
+        }
+    }
+     */
+
+    async function sendFileContent(content) {
+        try {
+            const response = await fetch('http://localhost:8080/upload', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/toml'
+                },
+                body: content
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to send file content');
+            }
+
+            const result = await response.text();
+            LogInfo('File content sent successfully: ' + result);
+        } catch (error) {
+            LogError('Error sending file content: ' + error);
+        }
+    }
+
     let value = [];
     const dropHandle = (event) => {
         value = [];
@@ -413,7 +447,29 @@
                 if (item.kind === 'file') {
                     const file = item.getAsFile();
                     value.push(file.name);
-                    value = value
+                    value = value;
+
+                    LogInfo("File detected: " + file.name);
+
+                    /*
+                    const reader = new FileReader();
+                    reader.onload = async (e) => {
+                        fileContent = e.target && typeof e.target.result === 'string' ? e.target.result : '';
+                        if (fileContent && isValidTOML(fileContent)) {
+                            await sendFileContent();
+                        }
+                    };
+                    reader.onerror = (e) => {
+                        LogError('Error reading file:' + e);
+                    };
+                    reader.readAsText(file);
+                     */
+                    file.text().then((fileContent) => {
+                        //LogInfo("File content: " + fileContent.toString());
+                        sendFileContent(fileContent);
+                    });
+                    //LogInfo("File content: " + fileContent.toString());
+                    //sendFileContent();
                 }
             });
         } else {
@@ -431,6 +487,45 @@
         }
     };
 
+    function handleDrop(event) {
+        const files = event.detail;
+        if (files.length > 1) {
+            alert('1 file ONLY.')
+            return;
+        }
+
+        const file = files[0];
+        const allowedExtensions = ['.toml'];
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+        if (!allowedExtensions.includes(`.${fileExtension}`)) {
+            alert(`The file ${file.name} is NOT allowed.`);
+            return;
+        }
+
+        alert(file.name)
+        //uploadFile(file);
+    }
+
+    async function uploadFile(file) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error('File upload failed')
+            }
+
+            console.log('File uploaded successfully');
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     const showFiles = (files) => {
         if (files.length === 1) return files[0];
         let concat = '';
@@ -445,16 +540,16 @@
         return concat;
     };
 
-   function saveFile() {
-       const blob = new Blob(["Hello, world!"], { type: "text/plain;charset=utf-8" });
-       const link = document.createElement("a");
+    function saveFile() {
+        const blob = new Blob(["Hello, world!"], {type: "text/plain;charset=utf-8"});
+        const link = document.createElement("a");
 
-       link.href = URL.createObjectURL(blob);
-       link.download = "example.txt";
-       document.body.appendChild(link);
-       link.click();
-       document.body.removeChild(link);
-   }
+        link.href = URL.createObjectURL(blob);
+        link.download = "example.txt";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
 </script>
 
 <main class="dark bg-gray-700">
@@ -469,10 +564,12 @@
 
     <Modal title="Import TOML file" bind:open={clickOutsideImport} autoclose outsideclose>
         <Dropzone
-                id="dropzone"
                 on:drop={dropHandle}
-                on:dragover={(event) => {event.preventDefault();}}
-                on:change={handleChange}>
+                on:dragover={(event) => {
+                    event.preventDefault();
+                }}
+                on:change={handleChange}
+                accept=".toml">
             <svg aria-hidden="true" class="mb-3 w-10 h-10 text-gray-400" fill="none" stroke="currentColor"
                  viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -481,7 +578,7 @@
             {#if value.length === 0}
                 <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span
                         class="font-semibold">Click to upload</span> or drag and drop</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">TOML</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">TOML only.</p>
             {:else}
                 <p>{showFiles(value)}</p>
             {/if}
