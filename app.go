@@ -221,21 +221,64 @@ func LoadTOML(inputdata string) {
 	fmt.Println("")
 }
 
-func (a *App) GetKeyAndMods(row int, col int) (string, uint64) {
-	fmt.Printf("[%d][%d] = %s(%d)\n", row, col, a.GetKey(row, col), a.GetModifiers(row, col))
+func (a *App) GetNormalKeyOfLayout1(row int, col int) string {
+	//fmt.Printf("row=%d, col=%d %s(%s)\n", row, col, layouts.Layout1.Normal[row][col][0], layouts.Layout1.Normal[row][col][1])
 
-	return a.GetKey(row, col), a.GetModifiers(row, col)
+	return KEYTOP[layouts.Layout1.Normal[row][col][0]]
 }
-func (a *App) GetKey(row int, col int) string {
-	fmt.Printf("row=%d, col=%d %s(%s)\n", row, col, layouts.Layout2.Normal[row][col][0], layouts.Layout2.Normal[row][col][1])
+
+func (a *App) GetNormalKeyOfLayout2(row int, col int) string {
+	//fmt.Printf("row=%d, col=%d %s(%s)\n", row, col, layouts.Layout2.Normal[row][col][0], layouts.Layout2.Normal[row][col][1])
 
 	return KEYTOP[layouts.Layout2.Normal[row][col][0]]
 }
 
-func (a *App) GetModifiers(row int, col int) uint64 {
-	fmt.Printf("row=%d, col=%d %s\n", row, col, layouts.Layout2.Normal[row][col][1])
+func (a *App) GetNormalModifiersOfLayout1(row int, col int) uint64 {
+	//fmt.Printf("row=%d, col=%d %s\n", row, col, layouts.Layout1.Normal[row][col][1])
 
 	if modifiers, err := strconv.ParseUint(layouts.Layout1.Normal[row][col][1], 2, 8); err == nil {
+		return modifiers
+	} else {
+		return 0
+	}
+}
+
+func (a *App) GetNormalModifiersOfLayout2(row int, col int) uint64 {
+	//fmt.Printf("row=%d, col=%d %s\n", row, col, layouts.Layout2.Normal[row][col][1])
+
+	if modifiers, err := strconv.ParseUint(layouts.Layout2.Normal[row][col][1], 2, 8); err == nil {
+		return modifiers
+	} else {
+		return 0
+	}
+}
+
+func (a *App) GetUpperKeyOfLayout1(row int, col int) string {
+	//fmt.Printf("row=%d, col=%d %s(%s)\n", row, col, layouts.Layout1.Normal[row][col][0], layouts.Layout1.Normal[row][col][1])
+
+	return KEYTOP[layouts.Layout1.Upper[row][col][0]]
+}
+
+func (a *App) GetUpperKeyOfLayout2(row int, col int) string {
+	//fmt.Printf("row=%d, col=%d %s(%s)\n", row, col, layouts.Layout2.Normal[row][col][0], layouts.Layout2.Normal[row][col][1])
+
+	return KEYTOP[layouts.Layout2.Upper[row][col][0]]
+}
+
+func (a *App) GetUpperModifiersOfLayout1(row int, col int) uint64 {
+	//fmt.Printf("row=%d, col=%d %s\n", row, col, layouts.Layout1.Normal[row][col][1])
+
+	if modifiers, err := strconv.ParseUint(layouts.Layout1.Upper[row][col][1], 2, 8); err == nil {
+		return modifiers
+	} else {
+		return 0
+	}
+}
+
+func (a *App) GetUpperModifiersOfLayout2(row int, col int) uint64 {
+	//fmt.Printf("row=%d, col=%d %s\n", row, col, layouts.Layout2.Normal[row][col][1])
+
+	if modifiers, err := strconv.ParseUint(layouts.Layout2.Upper[row][col][1], 2, 8); err == nil {
 		return modifiers
 	} else {
 		return 0

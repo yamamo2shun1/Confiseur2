@@ -32,7 +32,16 @@
         VolumeUpOutline
     } from "flowbite-svelte-icons";
     import {LogError, LogInfo} from "../wailsjs/runtime/runtime.js";
-    import {GetKey, GetModifiers} from "../wailsjs/go/main/App.js";
+    import {
+        GetNormalKeyOfLayout1,
+        GetNormalKeyOfLayout2,
+        GetNormalModifiersOfLayout1,
+        GetNormalModifiersOfLayout2,
+        GetUpperKeyOfLayout1,
+        GetUpperKeyOfLayout2,
+        GetUpperModifiersOfLayout1,
+        GetUpperModifiersOfLayout2
+    } from "../wailsjs/go/main/App.js";
 
     let radioGroup = "";
     let directionGroup = "";
@@ -441,15 +450,31 @@
                         continue;
                     }
 
-                    GetKey(row, col).then((key) => {
-                        GetModifiers(row, col).then((mods) => {
-                            LogInfo(`row: ${row}, col: ${col}, key: ${key}, mods: ${mods}`);
-                            if (key === '&nbsp;') {
+                    GetNormalKeyOfLayout2(row, col).then((key) => {
+                        GetNormalModifiersOfLayout2(row, col).then((mods) => {
+                            LogInfo(`NORMAL: row: ${row}, col: ${col}, key: ${key}, mods: ${mods}`);
+                            if (key === '&nbsp;' && mods > 0) {
                                 normalLayout1[row][col] = 'Mod.';
+                            } else if (key === '&nbsp;' && mods === 0) {
+                                normalLayout1[row][col] = '';
                             } else {
                                 normalLayout1[row][col] = key;
                             }
                             normalModifiers1[row][col] = mods;
+                        });
+                    });
+
+                    GetUpperKeyOfLayout2(row, col).then((key) => {
+                        GetUpperModifiersOfLayout2(row, col).then((mods) => {
+                            LogInfo(`UPPER: row: ${row}, col: ${col}, key: ${key}, mods: ${mods}`);
+                            if (key === '&nbsp;' && mods > 0) {
+                                upperLayout1[row][col] = 'Mod.';
+                            } else if (key === '&nbsp;' && mods === 0) {
+                                upperLayout1[row][col] = '';
+                            } else {
+                                upperLayout1[row][col] = key;
+                            }
+                            upperModifiers1[row][col] = mods;
                         });
                     });
                 }

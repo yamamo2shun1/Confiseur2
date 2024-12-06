@@ -213,100 +213,100 @@ var KEYCODE = map[string]byte{
 }
 
 var KEYTOP = map[string]string{
-	"A":           "A",                              // a
-	"B":           "B",                              // b
-	"C":           "C",                              // c
-	"D":           "D",                              // d
-	"E":           "E",                              // e
-	"F":           "F",                              // f
-	"G":           "G",                              // g
-	"H":           "H",                              // h
-	"I":           "I",                              // i
-	"J":           "J",                              // j
-	"K":           "K",                              // k
-	"L":           "L",                              // l
-	"M":           "M",                              // m
-	"N":           "N",                              // n
-	"O":           "O",                              // o
-	"P":           "P",                              // p
-	"Q":           "Q",                              // q
-	"R":           "R",                              // r
-	"S":           "S",                              // s
-	"T":           "T",                              // t
-	"U":           "U",                              // u
-	"V":           "V",                              // v
-	"W":           "W",                              // w
-	"X":           "X",                              // x
-	"Y":           "Y",                              // y
-	"Z":           "Z",                              // z
-	"1":           "1!",                             // 1!
-	"2":           "2@",                             // 2@
-	"3":           "3#",                             // 3#
-	"4":           "4$",                             // 4$
-	"5":           "5%",                             // 5%
-	"6":           "6^",                             // 6^
-	"7":           "7&",                             // 7&
-	"8":           "8*",                             // 8*
-	"9":           "9(",                             // 9(
-	"0":           "0)",                             // 0)
-	"Enter":       "Enter",                          // Enter
-	"Esc":         "Escape",                         // Escape
-	"BS":          "Backspace",                      // Backspace
-	"Tab":         "Tab",                            // Tab
-	"Space":       "Space",                          // Space
-	"Minus":       "-_",                             // -_
-	"Equal":       "=+",                             // =+
-	"O_SBracket":  "[{",                             // [{
-	"C_SBracket":  "}]",                             // ]}
-	"Backslash":   "\\|",                            // \|
-	"Colon":       ";:",                             // ;:
-	"Apostrophe":  "'\"",                            // '"
-	"Backquote":   "`~",                             // `~
-	"Comma":       ",<",                             // ,<
-	"Period":      ".>",                             // .>
-	"Slash":       "/?",                             // /?
-	"CapsLock":    "Caps Lock",                      // Caps Lock
-	"F1":          "F1",                             // F1
-	"F2":          "F2",                             // F2
-	"F3":          "F3",                             // F3
-	"F4":          "F4",                             // F4
-	"F5":          "F5",                             // F5
-	"F6":          "F6",                             // F6
-	"F7":          "F7",                             // F7
-	"F8":          "F8",                             // F8
-	"F9":          "F9",                             // F9
-	"F10":         "F10",                            // F10
-	"F11":         "F11",                            // F11
-	"F12":         "F12",                            // F12
-	"PrintScreen": "Print Screen",                   // Print Screen
-	"ScrollLock":  "Scroll Lock",                    // Scroll Lock
-	"Pause":       "Pause",                          // Pause
-	"Ins":         "Insert",                         // Insert
-	"Home":        "Home",                           // Home
-	"PageUp":      "Page Up",                        // Page Up
-	"Del":         "Delete",                         // Delete
-	"End":         "End",                            // End
-	"PageDown":    "Page Down",                      // Page Down
-	"Right":       "Right",                          // Right
-	"Left":        "Left",                           // Left
-	"Down":        "Down",                           // Down
-	"Up":          "Up",                             // Up
-	"NumLock":     "Num Lock",                       // Num Lock
-	"Katakana":    "カタカナ ひらがな",                      // カタカナ ひらがな
-	"Yen":         "￥|",                             // ￥|
-	"Henkan":      "変換",                             // 変換
-	"Muhenkan":    "無変換",                            // 無変換
-	"M_LBTN":      "Mouse Left Button",              // Mouse Left Button
-	"M_RBTN":      "Mouse Right Button",             // Mouse Right Button
-	"M_WHEEL":     "Mouse Wheel",                    // Mouse Wheel
-	"Reset":       "Reset",                          // Reset
-	"XF_CUT1":     "XFader Cut Ch.1(Phono/Line In)", // XFader Cut Ch.1(Phono/Line In)
-	"XF_CUT2":     "XFader Cut Ch.2(USB)",           // XFader Cut Ch.2(USB)
-	"MGain_Up":    "Master Gain Up",                 // Master Gain Up
-	"MGain_Down":  "Master Gain Down",               // Master Gain Down
-	"Upper":       "Upper",                          // Upper
-	"LNPH":        "Line Phono Switch",              // Line Phono Switch
-	"LAYOUT":      "Layout Switch",                  // Layout Switch
+	"A":           "A",                // a
+	"B":           "B",                // b
+	"C":           "C",                // c
+	"D":           "D",                // d
+	"E":           "E",                // e
+	"F":           "F",                // f
+	"G":           "G",                // g
+	"H":           "H",                // h
+	"I":           "I",                // i
+	"J":           "J",                // j
+	"K":           "K",                // k
+	"L":           "L",                // l
+	"M":           "M",                // m
+	"N":           "N",                // n
+	"O":           "O",                // o
+	"P":           "P",                // p
+	"Q":           "Q",                // q
+	"R":           "R",                // r
+	"S":           "S",                // s
+	"T":           "T",                // t
+	"U":           "U",                // u
+	"V":           "V",                // v
+	"W":           "W",                // w
+	"X":           "X",                // x
+	"Y":           "Y",                // y
+	"Z":           "Z",                // z
+	"1":           "1!",               // 1!
+	"2":           "2@",               // 2@
+	"3":           "3#",               // 3#
+	"4":           "4$",               // 4$
+	"5":           "5%",               // 5%
+	"6":           "6^",               // 6^
+	"7":           "7&",               // 7&
+	"8":           "8*",               // 8*
+	"9":           "9(",               // 9(
+	"0":           "0)",               // 0)
+	"Enter":       "Enter",            // Enter
+	"Esc":         "Escape",           // Escape
+	"BS":          "Backspace",        // Backspace
+	"Tab":         "Tab",              // Tab
+	"Space":       "Space",            // Space
+	"Minus":       "-_",               // -_
+	"Equal":       "=+",               // =+
+	"O_SBracket":  "[{",               // [{
+	"C_SBracket":  "}]",               // ]}
+	"Backslash":   "\\|",              // \|
+	"Colon":       ";:",               // ;:
+	"Apostrophe":  "'\"",              // '"
+	"Backquote":   "`~",               // `~
+	"Comma":       ",<",               // ,<
+	"Period":      ".>",               // .>
+	"Slash":       "/?",               // /?
+	"CapsLock":    "CpsLk",            // Caps Lock
+	"F1":          "F1",               // F1
+	"F2":          "F2",               // F2
+	"F3":          "F3",               // F3
+	"F4":          "F4",               // F4
+	"F5":          "F5",               // F5
+	"F6":          "F6",               // F6
+	"F7":          "F7",               // F7
+	"F8":          "F8",               // F8
+	"F9":          "F9",               // F9
+	"F10":         "F10",              // F10
+	"F11":         "F11",              // F11
+	"F12":         "F12",              // F12
+	"PrintScreen": "PrScr",            // Print Screen
+	"ScrollLock":  "ScrLk",            // Scroll Lock
+	"Pause":       "Pause",            // Pause
+	"Ins":         "Ins",              // Insert
+	"Home":        "Home",             // Home
+	"PageUp":      "PgUp",             // Page Up
+	"Del":         "Del",              // Delete
+	"End":         "End",              // End
+	"PageDown":    "PgDwn",            // Page Down
+	"Right":       "Right",            // Right
+	"Left":        "Left",             // Left
+	"Down":        "Down",             // Down
+	"Up":          "Up",               // Up
+	"NumLock":     "NmLk",             // Num Lock
+	"Katakana":    "カタカナ ひらがな",        // カタカナ ひらがな
+	"Yen":         "￥|",               // ￥|
+	"Henkan":      "変換",               // 変換
+	"Muhenkan":    "無変換",              // 無変換
+	"M_LBTN":      "M_LB",             // Mouse Left Button
+	"M_RBTN":      "M_RB",             // Mouse Right Button
+	"M_WHEEL":     "M_Wh",             // Mouse Wheel
+	"Reset":       "Reset",            // Reset
+	"XF_CUT1":     "XF_C1",            // XFader Cut Ch.1(Phono/Line In)
+	"XF_CUT2":     "XF_C2",            // XFader Cut Ch.2(USB)
+	"MGain_Up":    "Master Gain Up",   // Master Gain Up
+	"MGain_Down":  "Master Gain Down", // Master Gain Down
+	"Upper":       "Upper",            // Upper
+	"LNPH":        "LNPH",             // Line Phono Switch
+	"LAYOUT":      "L1/L2",            // Layout Switch
 	"Null":        "&nbsp;",
 }
 var KEYNAME = make(map[byte]string)
