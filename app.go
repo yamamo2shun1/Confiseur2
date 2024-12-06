@@ -73,7 +73,7 @@ func (a *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s, It's show time!", name)
 }
 
-func (a *App) LoadTOML(inputdata string) {
+func LoadTOML(inputdata string) {
 	fmt.Println("-- Remap Layout ScanCode ---")
 
 	_, err = toml.Decode(inputdata, &layouts)
@@ -221,10 +221,25 @@ func (a *App) LoadTOML(inputdata string) {
 	fmt.Println("")
 }
 
+func (a *App) GetKeyAndMods(row int, col int) (string, uint64) {
+	fmt.Printf("[%d][%d] = %s(%d)\n", row, col, a.GetKey(row, col), a.GetModifiers(row, col))
+
+	return a.GetKey(row, col), a.GetModifiers(row, col)
+}
 func (a *App) GetKey(row int, col int) string {
-	fmt.Printf("row=%d, col=%d\n", row, col)
-	//return fmt.Sprintf("row=%d, col=%d", row, col)
-	return layouts.Layout2.Normal[row][col][0]
+	fmt.Printf("row=%d, col=%d %s(%s)\n", row, col, layouts.Layout2.Normal[row][col][0], layouts.Layout2.Normal[row][col][1])
+
+	return KEYTOP[layouts.Layout2.Normal[row][col][0]]
+}
+
+func (a *App) GetModifiers(row int, col int) uint64 {
+	fmt.Printf("row=%d, col=%d %s\n", row, col, layouts.Layout2.Normal[row][col][1])
+
+	if modifiers, err := strconv.ParseUint(layouts.Layout1.Normal[row][col][1], 2, 8); err == nil {
+		return modifiers
+	} else {
+		return 0
+	}
 }
 
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
@@ -238,37 +253,31 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("uploadHandler")
-	fmt.Println(r.Method)
-
 	if r.Method != http.MethodPost {
-		fmt.Println("Invalid request method")
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 		return
 	}
 
-	fmt.Println(r.Header.Get("Content-Type"))
 	if r.Header.Get("Content-Type") != "application/toml" {
-		fmt.Println("Invalid content type")
 		http.Error(w, "Invalid content type", http.StatusBadRequest)
 		return
 	}
 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		fmt.Println("Failed to read request body")
 		http.Error(w, "Failed to read request body", http.StatusInternalServerError)
 		return
 	}
 
 	fileContent = string(body)
 
-	// Process the file content
+	// Process the file conten
 	result, err := ProcessTOMLFile(fileContent)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	LoadTOML(fileContent)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -280,14 +289,10 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 func ProcessTOMLFile(content string) (string, error) {
 	var parsedData map[string]interface{}
 
-	fmt.Println(content)
-
 	err := toml.Unmarshal([]byte(content), &parsedData)
 	if err != nil {
 		return "", fmt.Errorf("TOML data parse failed: %w", err)
 	}
-
-	//log.Printf("Parsed TOML data: %+v\n", parsedData)
 
 	return "TOML file is processed correctly", nil
 }

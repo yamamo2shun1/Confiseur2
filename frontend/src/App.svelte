@@ -32,6 +32,7 @@
         VolumeUpOutline
     } from "flowbite-svelte-icons";
     import {LogError, LogInfo} from "../wailsjs/runtime/runtime.js";
+    import {GetKey, GetModifiers} from "../wailsjs/go/main/App.js";
 
     let radioGroup = "";
     let directionGroup = "";
@@ -433,6 +434,26 @@
 
             const result = await response.text();
             LogInfo('File content sent successfully: ' + result);
+
+            for (let row = 0; row < 4; row++) {
+                for (let col = 0; col < 10; col++) {
+                    if ((row === 3 && col === 0) || (row === 3 && col === 3) || (row === 3 && col === 5)) {
+                        continue;
+                    }
+
+                    GetKey(row, col).then((key) => {
+                        GetModifiers(row, col).then((mods) => {
+                            LogInfo(`row: ${row}, col: ${col}, key: ${key}, mods: ${mods}`);
+                            if (key === '&nbsp;') {
+                                normalLayout1[row][col] = 'Mod.';
+                            } else {
+                                normalLayout1[row][col] = key;
+                            }
+                            normalModifiers1[row][col] = mods;
+                        });
+                    });
+                }
+            }
         } catch (error) {
             LogError('Error sending file content: ' + error);
         }
