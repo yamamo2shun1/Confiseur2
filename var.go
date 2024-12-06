@@ -292,10 +292,10 @@ var KEYTOP = map[string]string{
 	"Down":        "Down",                           // Down
 	"Up":          "Up",                             // Up
 	"NumLock":     "Num Lock",                       // Num Lock
-	"Katakana":    "カタカナ ひらがな",              // カタカナ ひらがな
+	"Katakana":    "カタカナ ひらがな",                      // カタカナ ひらがな
 	"Yen":         "￥|",                             // ￥|
-	"Henkan":      "変換",                           // 変換
-	"Muhenkan":    "無変換",                         // 無変換
+	"Henkan":      "変換",                             // 変換
+	"Muhenkan":    "無変換",                            // 無変換
 	"M_LBTN":      "Mouse Left Button",              // Mouse Left Button
 	"M_RBTN":      "Mouse Right Button",             // Mouse Right Button
 	"M_WHEEL":     "Mouse Wheel",                    // Mouse Wheel
