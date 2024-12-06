@@ -6,3 +6,5 @@ dist/
 
 
 *.bak
+
+build/bin/
