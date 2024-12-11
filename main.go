@@ -26,9 +26,9 @@ func main() {
 	err := wails.Run(&options.App{
 		Title:             "Confiseur2",
 		Width:             820,
-		Height:            768,
+		Height:            800,
 		MinWidth:          820,
-		MinHeight:         768,
+		MinHeight:         800,
 		MaxWidth:          1280,
 		MaxHeight:         800,
 		DisableResize:     false,
