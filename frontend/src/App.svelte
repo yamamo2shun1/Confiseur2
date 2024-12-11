@@ -33,13 +33,9 @@
     } from "flowbite-svelte-icons";
     import {LogError, LogInfo} from "../wailsjs/runtime/runtime.js";
     import {
-        GetNormalKeyOfLayout1,
         GetNormalKeyOfLayout2,
-        GetNormalModifiersOfLayout1,
         GetNormalModifiersOfLayout2,
-        GetUpperKeyOfLayout1,
         GetUpperKeyOfLayout2,
-        GetUpperModifiersOfLayout1,
         GetUpperModifiersOfLayout2
     } from "../wailsjs/go/main/App.js";
 
@@ -148,32 +144,64 @@
 
     let keytopMap = new Map(allKeyMaps.map(item => [item.name, item.value]));
 
-    let normalLayout1 = [
-        ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
-        ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';:'],
-        ['Z', 'X', 'C', 'V', 'B', 'N', 'M', ',<', '.>', '/?'],
-        ['', 'Mod.', 'Mod.', 'STK1', 'Mod.', 'STK2', 'Left', 'Down', 'Up', 'Right']
+    let normalLayout = [
+        [
+            ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+            ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';:'],
+            ['Z', 'X', 'C', 'V', 'B', 'N', 'M', ',<', '.>', '/?'],
+            ['', 'Mod.', 'Mod.', 'STK1', 'Mod.', 'STK2', 'Left', 'Down', 'Up', 'Right']
+        ],
+        [
+            ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+            ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';:'],
+            ['Z', 'X', 'C', 'V', 'B', 'N', 'M', ',<', '.>', '/?'],
+            ['', 'Mod.', 'Mod.', 'STK1', 'Mod.', 'STK2', 'Left', 'Down', 'Up', 'Right']
+        ]
     ];
 
-    let normalModifiers1 = [
-        [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
-        [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
-        [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
-        [0b00000000, 0b10000000, 0b01000000, 0b00000000, 0b00010000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000]
+    let normalModifiers = [
+        [
+            [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
+            [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
+            [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
+            [0b00000000, 0b10000000, 0b01000000, 0b00000000, 0b00010000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000]
+        ],
+        [
+            [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
+            [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
+            [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
+            [0b00000000, 0b10000000, 0b01000000, 0b00000000, 0b00010000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000]
+        ]
     ];
 
-    let upperLayout1 = [
-        ['1!', '2@', '3#', '4$', '5%', '6^', '7&', '8*', '9(', '0)'],
-        ['`~', '\'"', '', '', '', '', '[{', ']}', '-_', ';:'],
-        ['', '', '', '', '', '', '=+', ',<', '.>', '/?'],
-        ['', 'LGUI', 'LALT', 'STK1', 'LCTRL', 'STK2', '', 'Master Gain Down', 'Master Gain Up', 'Reset']
+    let upperLayout = [
+        [
+            ['1!', '2@', '3#', '4$', '5%', '6^', '7&', '8*', '9(', '0)'],
+            ['`~', '\'"', '', '', '', '', '[{', ']}', '-_', ';:'],
+            ['', '', '', '', '', '', '=+', ',<', '.>', '/?'],
+            ['', 'LGUI', 'LALT', 'STK1', 'LCTRL', 'STK2', '', 'Master Gain Down', 'Master Gain Up', 'Reset']
+        ],
+        [
+            ['1!', '2@', '3#', '4$', '5%', '6^', '7&', '8*', '9(', '0)'],
+            ['`~', '\'"', '', '', '', '', '[{', ']}', '-_', ';:'],
+            ['', '', '', '', '', '', '=+', ',<', '.>', '/?'],
+            ['', 'LGUI', 'LALT', 'STK1', 'LCTRL', 'STK2', '', 'Master Gain Down', 'Master Gain Up', 'Reset']
+        ],
     ];
 
-    let upperModifiers1 = [
-        [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
-        [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
-        [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
-        [0b00000000, 0b10000000, 0b01000000, 0b00000000, 0b00010000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000]
+    let upperModifiers = [
+        [
+            [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
+            [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
+            [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
+            [0b00000000, 0b10000000, 0b01000000, 0b00000000, 0b00010000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000]
+        ],
+        [
+            [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
+            [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
+            [0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000],
+            [0b00000000, 0b10000000, 0b01000000, 0b00000000, 0b00010000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000]
+        ]
     ];
 
     let stk1Keys = [
@@ -201,6 +229,7 @@
     ];
 
     let selectedLayoutIndex = 0;
+    let selectedNormal = true;
 
     let dropdownOpen = false;
     let selectedRow = 0;
@@ -236,6 +265,10 @@
         selectedLayoutIndex = index;
     }
 
+    function selectNormal(event, flag) {
+        selectedNormal = flag;
+    }
+
     function selectKey(event) {
         let val = parseInt(event.target.value);
         selectedCol = val % 10;
@@ -258,33 +291,30 @@
             selectedSettingTab = 0;
         }
 
-        switch (selectedLayoutIndex) {
-            case 0:
-                isDisabledStkDropdown = true;
-                currentStkKeycode = "";
+        if (selectedNormal) {
+            isDisabledStkDropdown = true;
+            currentStkKeycode = "";
 
-                isCheckedRCTRL = !!(normalModifiers1[selectedRow][selectedCol] & 0b00000001);
-                isCheckedRSHIFT = !!((normalModifiers1[selectedRow][selectedCol] >> 1) & 0b00000001);
-                isCheckedRALT = !!((normalModifiers1[selectedRow][selectedCol] >> 2) & 0b00000001);
-                isCheckedRGUI = !!((normalModifiers1[selectedRow][selectedCol] >> 3) & 0b00000001);
-                isCheckedLCTRL = !!((normalModifiers1[selectedRow][selectedCol] >> 4) & 0b00000001);
-                isCheckedLSHIFT = !!((normalModifiers1[selectedRow][selectedCol] >> 5) & 0b00000001);
-                isCheckedLALT = !!((normalModifiers1[selectedRow][selectedCol] >> 6) & 0b00000001);
-                isCheckedLGUI = !!((normalModifiers1[selectedRow][selectedCol] >> 7) & 0b00000001);
-                break;
-            case 1:
-                isDisabledStkDropdown = true;
-                currentStkKeycode = "";
+            isCheckedRCTRL = !!(normalModifiers[0][selectedRow][selectedCol] & 0b00000001);
+            isCheckedRSHIFT = !!((normalModifiers[0][selectedRow][selectedCol] >> 1) & 0b00000001);
+            isCheckedRALT = !!((normalModifiers[0][selectedRow][selectedCol] >> 2) & 0b00000001);
+            isCheckedRGUI = !!((normalModifiers[0][selectedRow][selectedCol] >> 3) & 0b00000001);
+            isCheckedLCTRL = !!((normalModifiers[0][selectedRow][selectedCol] >> 4) & 0b00000001);
+            isCheckedLSHIFT = !!((normalModifiers[0][selectedRow][selectedCol] >> 5) & 0b00000001);
+            isCheckedLALT = !!((normalModifiers[0][selectedRow][selectedCol] >> 6) & 0b00000001);
+            isCheckedLGUI = !!((normalModifiers[0][selectedRow][selectedCol] >> 7) & 0b00000001);
+        } else {
+            isDisabledStkDropdown = true;
+            currentStkKeycode = "";
 
-                isCheckedRCTRL = !!(upperModifiers1[selectedRow][selectedCol] & 0b00000001);
-                isCheckedRSHIFT = !!((upperModifiers1[selectedRow][selectedCol] >> 1) & 0b00000001);
-                isCheckedRALT = !!((upperModifiers1[selectedRow][selectedCol] >> 2) & 0b00000001);
-                isCheckedRGUI = !!((upperModifiers1[selectedRow][selectedCol] >> 3) & 0b00000001);
-                isCheckedLCTRL = !!((upperModifiers1[selectedRow][selectedCol] >> 4) & 0b00000001);
-                isCheckedLSHIFT = !!((upperModifiers1[selectedRow][selectedCol] >> 5) & 0b00000001);
-                isCheckedLALT = !!((upperModifiers1[selectedRow][selectedCol] >> 6) & 0b00000001);
-                isCheckedLGUI = !!((upperModifiers1[selectedRow][selectedCol] >> 7) & 0b00000001);
-                break;
+            isCheckedRCTRL = !!(upperModifiers[0][selectedRow][selectedCol] & 0b00000001);
+            isCheckedRSHIFT = !!((upperModifiers[0][selectedRow][selectedCol] >> 1) & 0b00000001);
+            isCheckedRALT = !!((upperModifiers[0][selectedRow][selectedCol] >> 2) & 0b00000001);
+            isCheckedRGUI = !!((upperModifiers[0][selectedRow][selectedCol] >> 3) & 0b00000001);
+            isCheckedLCTRL = !!((upperModifiers[0][selectedRow][selectedCol] >> 4) & 0b00000001);
+            isCheckedLSHIFT = !!((upperModifiers[0][selectedRow][selectedCol] >> 5) & 0b00000001);
+            isCheckedLALT = !!((upperModifiers[0][selectedRow][selectedCol] >> 6) & 0b00000001);
+            isCheckedLGUI = !!((upperModifiers[0][selectedRow][selectedCol] >> 7) & 0b00000001);
         }
     }
 
@@ -323,27 +353,27 @@
     }
 
     function renewKeytop(event) {
-        if (selectedLayoutIndex === 0) {
-            normalLayout1[selectedRow][selectedCol] = keytopMap.get(event.target.textContent);
-        } else if (selectedLayoutIndex === 1) {
-            upperLayout1[selectedRow][selectedCol] = keytopMap.get(event.target.textContent);
+        if (selectedNormal) {
+            normalLayout[0][selectedRow][selectedCol] = keytopMap.get(event.target.textContent);
+        } else {
+            upperLayout[0][selectedRow][selectedCol] = keytopMap.get(event.target.textContent);
         }
 
         dropdownOpen = false;
     }
 
     function renewModifiers(event, index) {
-        if (selectedLayoutIndex === 0) {
+        if (selectedNormal) {
             if (event.target.checked) {
-                normalModifiers1[selectedRow][selectedCol] |= 0b00000001 << index;
+                normalModifiers[0][selectedRow][selectedCol] |= 0b00000001 << index;
             } else {
-                normalModifiers1[selectedRow][selectedCol] &= ~(0b00000001 << index);
+                normalModifiers[0][selectedRow][selectedCol] &= ~(0b00000001 << index);
             }
-        } else if (selectedLayoutIndex === 1) {
+        } else {
             if (event.target.checked) {
-                upperModifiers1[selectedRow][selectedCol] |= 0b00000001 << index;
+                upperModifiers[0][selectedRow][selectedCol] |= 0b00000001 << index;
             } else {
-                upperModifiers1[selectedRow][selectedCol] &= ~(0b00000001 << index);
+                upperModifiers[0][selectedRow][selectedCol] &= ~(0b00000001 << index);
             }
 
         }
@@ -454,13 +484,13 @@
                         GetNormalModifiersOfLayout2(row, col).then((mods) => {
                             LogInfo(`NORMAL: row: ${row}, col: ${col}, key: ${key}, mods: ${mods}`);
                             if (key === '&nbsp;' && mods > 0) {
-                                normalLayout1[row][col] = 'Mod.';
+                                normalLayout[0][row][col] = 'Mod.';
                             } else if (key === '&nbsp;' && mods === 0) {
-                                normalLayout1[row][col] = '';
+                                normalLayout[0][row][col] = '';
                             } else {
-                                normalLayout1[row][col] = key;
+                                normalLayout[0][row][col] = key;
                             }
-                            normalModifiers1[row][col] = mods;
+                            normalModifiers[0][row][col] = mods;
                         });
                     });
 
@@ -468,13 +498,13 @@
                         GetUpperModifiersOfLayout2(row, col).then((mods) => {
                             LogInfo(`UPPER: row: ${row}, col: ${col}, key: ${key}, mods: ${mods}`);
                             if (key === '&nbsp;' && mods > 0) {
-                                upperLayout1[row][col] = 'Mod.';
+                                upperLayout[0][row][col] = 'Mod.';
                             } else if (key === '&nbsp;' && mods === 0) {
-                                upperLayout1[row][col] = '';
+                                upperLayout[0][row][col] = '';
                             } else {
-                                upperLayout1[row][col] = key;
+                                upperLayout[0][row][col] = key;
                             }
-                            upperModifiers1[row][col] = mods;
+                            upperModifiers[0][row][col] = mods;
                         });
                     });
                 }
@@ -632,57 +662,118 @@
     </Modal>
 
     <Tabs class="border-gray-700" tabStyle="underline">
-        <TabItem open title="Normal" on:click={(event) => selectLayout(event, 0)}>
-            {#each normalLayout1 as row, rowIndex}
-                {#each row as key, colIndex}
-                    {#if key !== null}
-                        <RadioButton
-                                value="{10 * rowIndex + colIndex}"
-                                bind:group={radioGroup}
-                                size="sm"
-                                class="w-12 h-12 mx-1 my-1 bg-primary-600 {isRounded(rowIndex, colIndex) ? 'rounded-full':''}"
-                                on:change={selectKey}
-                                disabled={isDisabled(rowIndex, colIndex)}>
-                            {#if key !== 'Left' && key !== 'Right' && key !== 'Up' && key !== 'Down' && key !== 'Master Gain Up' && key !== 'Master Gain Down'}
-                                {@html key}
+        <TabItem open title="Layout1" on:click={(event) => selectLayout(event, 0)}>
+            <Tabs class="border-gray-700" tabStyle="underline">
+                <TabItem open title="Normal" on:click={(event) => selectNormal(event, true)}>
+                    {#each normalLayout[0] as row, rowIndex}
+                        {#each row as key, colIndex}
+                            {#if key !== null}
+                                <RadioButton
+                                        value="{10 * rowIndex + colIndex}"
+                                        bind:group={radioGroup}
+                                        size="sm"
+                                        class="w-12 h-12 mx-1 my-1 bg-primary-600 {isRounded(rowIndex, colIndex) ? 'rounded-full':''}"
+                                        on:change={selectKey}
+                                        disabled={isDisabled(rowIndex, colIndex)}>
+                                    {#if key !== 'Left' && key !== 'Right' && key !== 'Up' && key !== 'Down' && key !== 'Master Gain Up' && key !== 'Master Gain Down'}
+                                        {@html key}
+                                    {/if}
+                                    {#if isNokey(key)}
+                                        &nbsp;
+                                    {/if}
+                                    {#if getIcon(key)}
+                                        &nbsp;<svelte:component this={getIcon(key)}
+                                                                class="w-5 h-6 -ms-1 text-white dark:text-white"/>
+                                    {/if}
+                                </RadioButton>
                             {/if}
-                            {#if isNokey(key)}
-                                &nbsp;
+                        {/each}
+                        <br>
+                    {/each}
+                </TabItem>
+                <TabItem title="Upper" on:click={(event) => selectNormal(event, false)}>
+                    {#each upperLayout[0] as row, rowIndex}
+                        {#each row as key, colIndex}
+                            {#if key !== null}
+                                <RadioButton
+                                        value="{10 * rowIndex + colIndex}"
+                                        bind:group={radioGroup}
+                                        size="sm"
+                                        class="w-12 h-12 mx-1 my-1 {isRounded(rowIndex, colIndex) ? 'rounded-full':''}"
+                                        on:change={selectKey}
+                                        disabled={isDisabled(rowIndex, colIndex)}>
+                                    {key === 'Left' || key === 'Right' || key === 'Up' || key === 'Down' || key === 'Master Gain Up' || key === 'Master Gain Down' ? '' : key}
+                                    {#if isNokey(key)}
+                                        &nbsp;
+                                    {/if}
+                                    {#if getIcon(key)}
+                                        &nbsp;<svelte:component this={getIcon(key)}
+                                                                class="w-5 h-6 -ms-1"/>
+                                    {/if}
+                                </RadioButton>
                             {/if}
-                            {#if getIcon(key)}
-                                &nbsp;<svelte:component this={getIcon(key)}
-                                                        class="w-5 h-6 -ms-1 text-white dark:text-white"/>
-                            {/if}
-                        </RadioButton>
-                    {/if}
-                {/each}
-                <br>
-            {/each}
+                        {/each}
+                        <br>
+                    {/each}
+                </TabItem>
+            </Tabs>
         </TabItem>
-        <TabItem title="Upper" on:click={(event) => selectLayout(event, 1)}>
-            {#each upperLayout1 as row, rowIndex}
-                {#each row as key, colIndex}
-                    {#if key !== null}
-                        <RadioButton
-                                value="{10 * rowIndex + colIndex}"
-                                bind:group={radioGroup}
-                                size="sm"
-                                class="w-12 h-12 mx-1 my-1 {isRounded(rowIndex, colIndex) ? 'rounded-full':''}"
-                                on:change={selectKey}
-                                disabled={isDisabled(rowIndex, colIndex)}>
-                            {key === 'Left' || key === 'Right' || key === 'Up' || key === 'Down' || key === 'Master Gain Up' || key === 'Master Gain Down' ? '' : key}
-                            {#if isNokey(key)}
-                                &nbsp;
+        <TabItem title="Layout2" on:click={(event) => selectLayout(event, 1)}>
+            <Tabs class="border-gray-700" tabStyle="underline">
+                <TabItem open title="Normal" on:click={(event) => selectNormal(event, true)}>
+                    {#each normalLayout[1] as row, rowIndex}
+                        {#each row as key, colIndex}
+                            {#if key !== null}
+                                <RadioButton
+                                        value="{10 * rowIndex + colIndex}"
+                                        bind:group={radioGroup}
+                                        size="sm"
+                                        class="w-12 h-12 mx-1 my-1 bg-primary-600 {isRounded(rowIndex, colIndex) ? 'rounded-full':''}"
+                                        on:change={selectKey}
+                                        disabled={isDisabled(rowIndex, colIndex)}>
+                                    {#if key !== 'Left' && key !== 'Right' && key !== 'Up' && key !== 'Down' && key !== 'Master Gain Up' && key !== 'Master Gain Down'}
+                                        {@html key}
+                                    {/if}
+                                    {#if isNokey(key)}
+                                        &nbsp;
+                                    {/if}
+                                    {#if getIcon(key)}
+                                        &nbsp;<svelte:component this={getIcon(key)}
+                                                                class="w-5 h-6 -ms-1 text-white dark:text-white"/>
+                                    {/if}
+                                </RadioButton>
                             {/if}
-                            {#if getIcon(key)}
-                                &nbsp;<svelte:component this={getIcon(key)}
-                                                        class="w-5 h-6 -ms-1"/>
+                        {/each}
+                        <br>
+                    {/each}
+                </TabItem>
+                <TabItem title="Upper" on:click={(event) => selectNormal(event, false)}>
+                    {#each upperLayout[1] as row, rowIndex}
+                        {#each row as key, colIndex}
+                            {#if key !== null}
+                                <RadioButton
+                                        value="{10 * rowIndex + colIndex}"
+                                        bind:group={radioGroup}
+                                        size="sm"
+                                        class="w-12 h-12 mx-1 my-1 {isRounded(rowIndex, colIndex) ? 'rounded-full':''}"
+                                        on:change={selectKey}
+                                        disabled={isDisabled(rowIndex, colIndex)}>
+                                    {key === 'Left' || key === 'Right' || key === 'Up' || key === 'Down' || key === 'Master Gain Up' || key === 'Master Gain Down' ? '' : key}
+                                    {#if isNokey(key)}
+                                        &nbsp;
+                                    {/if}
+                                    {#if getIcon(key)}
+                                        &nbsp;<svelte:component this={getIcon(key)}
+                                                                class="w-5 h-6 -ms-1"/>
+                                    {/if}
+                                </RadioButton>
                             {/if}
-                        </RadioButton>
-                    {/if}
-                {/each}
-                <br>
-            {/each}
+                        {/each}
+                        <br>
+                    {/each}
+                </TabItem>
+            </Tabs>
+
         </TabItem>
     </Tabs>
     <br>
