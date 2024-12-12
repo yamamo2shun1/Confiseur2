@@ -527,9 +527,11 @@
 
                     LogInfo("[dropHandle] File detected: " + file.name);
 
-                    file.text().then((fileContent) => {
-                        sendFileContent(fileContent);
-                    });
+                    if (checkFile(file.name)) {
+                        file.text().then((fileContent) => {
+                            sendFileContent(fileContent);
+                        });
+                    }
                 }
             });
         } else {
@@ -540,6 +542,7 @@
     };
 
     const handleChange = (event) => {
+        value = [];
         const files = event.target.files;
 
         if (files.length > 0) {
@@ -548,14 +551,27 @@
 
             LogInfo("[handleHandle] File detected: " + files[0].name);
 
-            files[0].text().then((fileContent) => {
-                sendFileContent(fileContent);
-            });
+            if (checkFile(files[0].name)) {
+                files[0].text().then((fileContent) => {
+                    sendFileContent(fileContent);
+                });
+            }
         }
     };
 
+    const checkFile = (file) => {
+        const fileExtension = file.split('.').pop();
+        return fileExtension === 'toml';
+    };
+
     const showFiles = (files) => {
-        return files[0];
+        if (files.length > 0) {
+            if (checkFile(files[0])) {
+                return files[0];
+            } else {
+                return '';
+            }
+        }
     };
 
     function saveFile() {
@@ -593,7 +609,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
             </svg>
-            {#if value.length === 0}
+            {#if value.length === 0 || checkFile(value[0]) === false}
                 <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span
                         class="font-semibold">Click to upload</span> or drag and drop</p>
                 <p class="text-xs text-gray-500 dark:text-gray-400">TOML only.</p>
