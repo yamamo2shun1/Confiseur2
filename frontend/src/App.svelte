@@ -525,27 +525,11 @@
                     value.push(file.name);
                     value = value;
 
-                    LogInfo("File detected: " + file.name);
+                    LogInfo("[dropHandle] File detected: " + file.name);
 
-                    /*
-                    const reader = new FileReader();
-                    reader.onload = async (e) => {
-                        fileContent = e.target && typeof e.target.result === 'string' ? e.target.result : '';
-                        if (fileContent && isValidTOML(fileContent)) {
-                            await sendFileContent();
-                        }
-                    };
-                    reader.onerror = (e) => {
-                        LogError('Error reading file:' + e);
-                    };
-                    reader.readAsText(file);
-                     */
                     file.text().then((fileContent) => {
-                        //LogInfo("File content: " + fileContent.toString());
                         sendFileContent(fileContent);
                     });
-                    //LogInfo("File content: " + fileContent.toString());
-                    //sendFileContent();
                 }
             });
         } else {
@@ -557,50 +541,18 @@
 
     const handleChange = (event) => {
         const files = event.target.files;
+
         if (files.length > 0) {
             value.push(files[0].name);
             value = value;
+
+            LogInfo("[handleHandle] File detected: " + files[0].name);
+
+            files[0].text().then((fileContent) => {
+                sendFileContent(fileContent);
+            });
         }
     };
-
-    function handleDrop(event) {
-        const files = event.detail;
-        if (files.length > 1) {
-            alert('1 file ONLY.')
-            return;
-        }
-
-        const file = files[0];
-        const allowedExtensions = ['.toml'];
-        const fileExtension = file.name.split('.').pop().toLowerCase();
-        if (!allowedExtensions.includes(`.${fileExtension}`)) {
-            alert(`The file ${file.name} is NOT allowed.`);
-            return;
-        }
-
-        alert(file.name)
-        //uploadFile(file);
-    }
-
-    async function uploadFile(file) {
-        const formData = new FormData();
-        formData.append('file', file);
-
-        try {
-            const response = await fetch('/upload', {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (!response.ok) {
-                throw new Error('File upload failed')
-            }
-
-            console.log('File uploaded successfully');
-        } catch (error) {
-            console.error(error);
-        }
-    }
 
     const showFiles = (files) => {
         if (files.length === 1) return files[0];
@@ -638,7 +590,7 @@
         </div>
     </div>
 
-    <Modal title="Import TOML file" bind:open={clickOutsideImport} autoclose outsideclose>
+    <Modal title="Import TOML file" bind:open={clickOutsideImport} outsideclose>
         <Dropzone
                 on:drop={dropHandle}
                 on:dragover={(event) => {
