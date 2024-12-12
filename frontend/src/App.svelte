@@ -31,15 +31,16 @@
         VolumeDownOutline,
         VolumeUpOutline
     } from "flowbite-svelte-icons";
+    import tomlify from 'tomlify-j0.4';
     import {LogError, LogInfo} from "../wailsjs/runtime/runtime.js";
     import {
         GetNormalKeyOfLayout1,
-        GetNormalModifiersOfLayout1,
-        GetUpperKeyOfLayout1,
-        GetUpperModifiersOfLayout1,
         GetNormalKeyOfLayout2,
+        GetNormalModifiersOfLayout1,
         GetNormalModifiersOfLayout2,
+        GetUpperKeyOfLayout1,
         GetUpperKeyOfLayout2,
+        GetUpperModifiersOfLayout1,
         GetUpperModifiersOfLayout2
     } from "../wailsjs/go/main/App.js";
 
@@ -607,7 +608,36 @@
     };
 
     function saveFile() {
-        const blob = new Blob(["Hello, world!"], {type: "application/toml;charset=utf-8"});
+        let data = {
+            title: "Example TOML",
+            owner: {
+                name: "Tom Preston-Werner",
+                dob: new Date('1979-05-27T07:32:00Z'),
+            },
+            database: {
+                server: "192.168.1.1",
+                ports: [8000, 8001, 8002],
+                connection_max: 5000,
+                enabled: true
+            },
+            servers: {
+                alpha: {
+                    ip: "10.0.0.1",
+                    dc: "eqdc10"
+                },
+                beta: {
+                    ip: "10.0.0.2",
+                    dc: "eqdc10"
+                }
+            },
+            clients: {
+                data: [["gamma", "delta"], [1, 2]]
+            }
+        };
+        const tomlStr = tomlify.toToml(data, {space: 2});
+
+        const blob = new Blob([tomlStr], {type: "application/toml;charset=utf-8"});
+        //const blob = new Blob(['hello world.'], {type: "application/toml;charset=utf-8"});
         const link = document.createElement("a");
 
         link.href = URL.createObjectURL(blob);
