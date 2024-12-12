@@ -555,17 +555,7 @@
     };
 
     const showFiles = (files) => {
-        if (files.length === 1) return files[0];
-        let concat = '';
-        files.map((file) => {
-            concat += file;
-            concat += ',';
-            concat += ' ';
-        });
-
-        if (concat.length > 40) concat = concat.slice(0, 40);
-        concat += '...';
-        return concat;
+        return files[0];
     };
 
     function saveFile() {
