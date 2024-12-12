@@ -266,6 +266,11 @@
 
     let clickOutsideImport = false;
 
+    function combineArrays(keys, modifiers) {
+        return keys.map((row, rowIndex) =>
+            row.map((key, colIndex) => [key, `0b${modifiers[rowIndex][colIndex].toString(2).padStart(8, '0')}`]));
+    }
+
     function selectLayout(event, index) {
         selectedLayoutIndex = index;
     }
@@ -609,30 +614,28 @@
 
     function saveFile() {
         let data = {
-            title: "Example TOML",
-            owner: {
-                name: "Tom Preston-Werner",
-                dob: new Date('1979-05-27T07:32:00Z'),
+            layout1: {
+                normal: combineArrays(normalLayout[0], normalModifiers[0]),
+                upper: combineArrays(upperLayout[0], upperModifiers[0]),
+                stick: combineArrays(stk1Keys, stk1Modifiers),
+                led: [
+                    [0x00, 0xAE, 0xEF],
+                    [0xEF, 0x00, 0xAE],
+                    [0xAE, 0xEF, 0x00]
+                ],
+                intensity: [1.0],
             },
-            database: {
-                server: "192.168.1.1",
-                ports: [8000, 8001, 8002],
-                connection_max: 5000,
-                enabled: true
+            layout2: {
+                normal: combineArrays(normalLayout[1], normalModifiers[1]),
+                upper: combineArrays(upperLayout[1], upperModifiers[1]),
+                stick: combineArrays(stk2Keys, stk2Modifiers),
+                led: [
+                    [0x00, 0xAE, 0xEF],
+                    [0xEF, 0x00, 0xAE],
+                    [0xAE, 0xEF, 0x00]
+                ],
+                intensity: [1.0],
             },
-            servers: {
-                alpha: {
-                    ip: "10.0.0.1",
-                    dc: "eqdc10"
-                },
-                beta: {
-                    ip: "10.0.0.2",
-                    dc: "eqdc10"
-                }
-            },
-            clients: {
-                data: [["gamma", "delta"], [1, 2]]
-            }
         };
         const tomlStr = tomlify.toToml(data, {space: 2});
 
