@@ -235,6 +235,7 @@
 
     let selectedLayoutIndex = 0;
     let selectedNormal = true;
+    let selectedLED = false;
 
     let dropdownOpen = false;
     let selectedRow = 0;
@@ -277,6 +278,11 @@
 
     function selectNormal(event, flag) {
         selectedNormal = flag;
+        selectedLED = false;
+    }
+
+    function selectLED(event) {
+        selectedLED = true;
     }
 
     function selectKey(event) {
@@ -739,6 +745,8 @@
                         <br>
                     {/each}
                 </TabItem>
+                <TabItem title="LED" on:click={(event) => selectLED(event)}>
+                </TabItem>
             </Tabs>
         </TabItem>
         <TabItem title="Layout2" on:click={(event) => selectLayout(event, 1)}>
@@ -794,6 +802,8 @@
                         {/each}
                         <br>
                     {/each}
+                </TabItem>
+                <TabItem title="LED" on:click={(event) => selectLED(event)}>
                 </TabItem>
             </Tabs>
 
