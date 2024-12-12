@@ -33,6 +33,10 @@
     } from "flowbite-svelte-icons";
     import {LogError, LogInfo} from "../wailsjs/runtime/runtime.js";
     import {
+        GetNormalKeyOfLayout1,
+        GetNormalModifiersOfLayout1,
+        GetUpperKeyOfLayout1,
+        GetUpperModifiersOfLayout1,
         GetNormalKeyOfLayout2,
         GetNormalModifiersOfLayout2,
         GetUpperKeyOfLayout2,
@@ -480,8 +484,8 @@
                         continue;
                     }
 
-                    GetNormalKeyOfLayout2(row, col).then((key) => {
-                        GetNormalModifiersOfLayout2(row, col).then((mods) => {
+                    GetNormalKeyOfLayout1(row, col).then((key) => {
+                        GetNormalModifiersOfLayout1(row, col).then((mods) => {
                             LogInfo(`NORMAL: row: ${row}, col: ${col}, key: ${key}, mods: ${mods}`);
                             if (key === '&nbsp;' && mods > 0) {
                                 normalLayout[0][row][col] = 'Mod.';
@@ -494,8 +498,8 @@
                         });
                     });
 
-                    GetUpperKeyOfLayout2(row, col).then((key) => {
-                        GetUpperModifiersOfLayout2(row, col).then((mods) => {
+                    GetUpperKeyOfLayout1(row, col).then((key) => {
+                        GetUpperModifiersOfLayout1(row, col).then((mods) => {
                             LogInfo(`UPPER: row: ${row}, col: ${col}, key: ${key}, mods: ${mods}`);
                             if (key === '&nbsp;' && mods > 0) {
                                 upperLayout[0][row][col] = 'Mod.';
@@ -505,6 +509,34 @@
                                 upperLayout[0][row][col] = key;
                             }
                             upperModifiers[0][row][col] = mods;
+                        });
+                    });
+
+                    GetNormalKeyOfLayout2(row, col).then((key) => {
+                        GetNormalModifiersOfLayout2(row, col).then((mods) => {
+                            LogInfo(`NORMAL: row: ${row}, col: ${col}, key: ${key}, mods: ${mods}`);
+                            if (key === '&nbsp;' && mods > 0) {
+                                normalLayout[0][row][col] = 'Mod.';
+                            } else if (key === '&nbsp;' && mods === 0) {
+                                normalLayout[1][row][col] = '';
+                            } else {
+                                normalLayout[1][row][col] = key;
+                            }
+                            normalModifiers[1][row][col] = mods;
+                        });
+                    });
+
+                    GetUpperKeyOfLayout2(row, col).then((key) => {
+                        GetUpperModifiersOfLayout2(row, col).then((mods) => {
+                            LogInfo(`UPPER: row: ${row}, col: ${col}, key: ${key}, mods: ${mods}`);
+                            if (key === '&nbsp;' && mods > 0) {
+                                upperLayout[1][row][col] = 'Mod.';
+                            } else if (key === '&nbsp;' && mods === 0) {
+                                upperLayout[1][row][col] = '';
+                            } else {
+                                upperLayout[1][row][col] = key;
+                            }
+                            upperModifiers[1][row][col] = mods;
                         });
                     });
                 }
@@ -575,11 +607,11 @@
     };
 
     function saveFile() {
-        const blob = new Blob(["Hello, world!"], {type: "text/plain;charset=utf-8"});
+        const blob = new Blob(["Hello, world!"], {type: "application/toml;charset=utf-8"});
         const link = document.createElement("a");
 
         link.href = URL.createObjectURL(blob);
-        link.download = "example.txt";
+        link.download = "my_stk_layout.toml";
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
