@@ -31,7 +31,7 @@
         VolumeDownOutline,
         VolumeUpOutline
     } from "flowbite-svelte-icons";
-    import tomlify from 'tomlify-j0.4';
+    import {stringify} from "smol-toml";
     import {LogError, LogInfo} from "../wailsjs/runtime/runtime.js";
     import {
         GetNormalKeyOfLayout1,
@@ -636,17 +636,15 @@
                 upper: combineArrays(upperLayout[1], upperModifiers[1]),
                 stick: combineArrays(stk2Keys, stk2Modifiers),
                 led: [
-                    [0x00, 0xAE, 0xEF],
-                    [0xEF, 0x00, 0xAE],
-                    [0xAE, 0xEF, 0x00]
+                    [0x00, 0xFF, 0xFF],
+                    [0xEF, 0xFF, 0xFF],
+                    [0x00, 0x00, 0x00]
                 ],
                 intensity: [1.0],
             },
         };
-        const tomlStr = tomlify.toToml(data, {space: 2});
-
+        const tomlStr = stringify(data);
         const blob = new Blob([tomlStr], {type: "application/toml;charset=utf-8"});
-        //const blob = new Blob(['hello world.'], {type: "application/toml;charset=utf-8"});
         const link = document.createElement("a");
 
         link.href = URL.createObjectURL(blob);
