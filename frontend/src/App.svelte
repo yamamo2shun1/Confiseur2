@@ -241,7 +241,7 @@
         [0b00000000, 0b00000000, 0b00000010],
     ];
 
-    let fileDropdownOpen = false;
+    let layoutDropdownOpen = false;
     let deviceDropdownOpen = false;
     let helpDropdownOpen = false;
 
@@ -643,24 +643,24 @@
     };
 
     function loadFromKeyboard() {
-        fileDropdownOpen = false;
+        layoutDropdownOpen = false;
     }
 
     function openDropzone() {
         clickOutsideImport = true;
-        fileDropdownOpen = false;
+        layoutDropdownOpen = false;
     }
 
     function remapKeyboard() {
-        fileDropdownOpen = false;
+        layoutDropdownOpen = false;
     }
 
     function saveAllSettings() {
-        fileDropdownOpen = false;
+        layoutDropdownOpen = false;
     }
 
     function downloadToml() {
-        fileDropdownOpen = false;
+        layoutDropdownOpen = false;
 
         let data = {
             layout1: {
@@ -729,10 +729,10 @@
 <main class="dark bg-gray-700">
     <div class="flex space-x-1 float-right mr-12">
         <NavUl>
-            <NavLi>File
+            <NavLi>Layout
                 <ChevronDownOutline class="w-6 h-6 ms-2 text-primary-800 dark:text-white inline"/>
             </NavLi>
-            <Dropdown class="w-44 z-20" bind:open={fileDropdownOpen}>
+            <Dropdown class="w-44 z-20" bind:open={layoutDropdownOpen}>
                 <DropdownItem on:click={loadFromKeyboard}>Load from Keyboard...</DropdownItem>
                 <DropdownItem on:click={openDropzone}>Import TOML file...</DropdownItem>
                 <DropdownDivider/>
