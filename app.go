@@ -12,26 +12,6 @@ import (
 	"strconv"
 )
 
-type Layouts struct {
-	Layout1 Layout
-	Layout2 Layout
-}
-
-type Layout struct {
-	Normal    [][][]string `toml:"normal"`
-	Upper     [][][]string `toml:"upper"`
-	Stick     [][][]string `toml:"stick"`
-	Led       [][]byte     `toml:"led"`
-	Intensity []float64    `toml:"intensity"`
-}
-
-var err error
-
-var layouts Layouts
-
-var maxRows = 4
-var maxColumns = 10
-
 // App struct
 type App struct {
 	ctx context.Context
@@ -46,6 +26,14 @@ func NewApp() *App {
 func (a *App) startup(ctx context.Context) {
 	// Perform your setup here
 	a.ctx = ctx
+
+	// Initialize the hid package.
+	if err := hid.Init(); err != nil {
+		log.Fatal(err)
+	}
+
+	// Open the device using the VID and PID.
+	openConnectedHIDDevices()
 }
 
 // domReady is called after front-end resources have been loaded
@@ -66,11 +54,6 @@ func (a *App) beforeClose(ctx context.Context) (prevent bool) {
 // shutdown is called at application termination
 func (a *App) shutdown(ctx context.Context) {
 	// Perform your teardown here
-}
-
-// Greet returns a greeting for the given name
-func (a *App) Greet(name string) string {
-	return fmt.Sprintf("Hello %s, It's show time!", name)
 }
 
 func LoadTOML(inputdata string) {
@@ -338,4 +321,16 @@ func ProcessTOMLFile(content string) (string, error) {
 	}
 
 	return "TOML file is processed correctly", nil
+}
+
+func (a *App) CheckHID() [3]string {
+	// Initialize the hid package.
+	if err := hid.Init(); err != nil {
+		log.Fatal(err)
+	}
+
+	// Open the device using the VID and PID.
+	openConnectedHIDDevices()
+
+	return checkHid()
 }

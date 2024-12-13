@@ -6,6 +6,7 @@ toolchain go1.23.2
 
 require (
 	github.com/BurntSushi/toml v1.4.0
+	github.com/shopspring/decimal v1.4.0
 	github.com/sstallion/go-hid v0.14.1
 	github.com/wailsapp/wails/v2 v2.9.2
 )

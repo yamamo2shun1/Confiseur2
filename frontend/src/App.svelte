@@ -1,12 +1,16 @@
 <script>
     import {
         Button,
+        Card,
         Checkbox,
         Dropdown,
+        DropdownDivider,
         DropdownItem,
         Dropzone,
         Label,
         Modal,
+        NavLi,
+        NavUl,
         RadioButton,
         TabItem,
         Table,
@@ -26,6 +30,7 @@
         ArrowLeftOutline,
         ArrowRightOutline,
         ArrowUpOutline,
+        ChevronDownOutline,
         ChevronRightOutline,
         CogOutline,
         VolumeDownOutline,
@@ -34,6 +39,7 @@
     import {stringify} from "smol-toml";
     import {LogError, LogInfo} from "../wailsjs/runtime/runtime.js";
     import {
+        CheckHID,
         GetNormalKeyOfLayout1,
         GetNormalKeyOfLayout2,
         GetNormalModifiersOfLayout1,
@@ -231,6 +237,19 @@
         [0b00000000, 0b00000010, 0b00000010],
         [0b00000000, 0b00000000, 0b00000000],
         [0b00000000, 0b00000000, 0b00000010],
+    ];
+
+    let fileDropdownOpen = false;
+    let deviceDropdownOpen = false;
+    let helpDropdownOpen = false;
+
+    let connectedDeviceModal = false;
+    let connectedDeviceList = [
+        {
+            manufacturer: "",
+            productname: "",
+            serialnumber: ""
+        }
     ];
 
     let selectedLayoutIndex = 0;
@@ -618,7 +637,26 @@
         }
     };
 
-    function saveFile() {
+    function loadFromKeyboard() {
+        fileDropdownOpen = false;
+    }
+
+    function openDropzone() {
+        clickOutsideImport = true;
+        fileDropdownOpen = false;
+    }
+
+    function remapKeyboard() {
+        fileDropdownOpen = false;
+    }
+
+    function saveAllSettings() {
+        fileDropdownOpen = false;
+    }
+
+    function downloadToml() {
+        fileDropdownOpen = false;
+
         let data = {
             layout1: {
                 normal: combineArrays(normalLayout[0], normalModifiers[0]),
@@ -653,17 +691,86 @@
         link.click();
         document.body.removeChild(link);
     }
+
+    function showConnectedDevice() {
+        deviceDropdownOpen = false;
+        connectedDeviceModal = true;
+        
+        connectedDeviceList[0].manufacturer = "";
+        connectedDeviceList[0].productname = "";
+        connectedDeviceList[0].serialnumber = "";
+
+        CheckHID().then((info) => {
+            connectedDeviceList[0].manufacturer = info[0];
+            connectedDeviceList[0].productname = info[1];
+            connectedDeviceList[0].serialnumber = info[2];
+            LogInfo("Manufacturer: " + info[0]);
+            LogInfo("Product: " + info[1]);
+            LogInfo("Serial: " + info[2]);
+        });
+    }
 </script>
 
 <main class="dark bg-gray-700">
-    <div class="flex space-x-1 float-end">
-        <div>
-            <Button outline on:click={() => (clickOutsideImport = true)}>Import</Button>
-        </div>
-        <div>
-            <Button outline on:click={saveFile}>Export</Button>
-        </div>
+    <div class="flex space-x-1 float-right mr-12">
+        <NavUl>
+            <NavLi>File
+                <ChevronDownOutline class="w-6 h-6 ms-2 text-primary-800 dark:text-white inline"/>
+            </NavLi>
+            <Dropdown class="w-44 z-20" bind:open={fileDropdownOpen}>
+                <DropdownItem on:click={loadFromKeyboard}>Load from Keyboard...</DropdownItem>
+                <DropdownItem on:click={openDropzone}>Import TOML file...</DropdownItem>
+                <DropdownDivider/>
+                <DropdownItem on:click={remapKeyboard}>Remap</DropdownItem>
+                <DropdownItem on:click={saveAllSettings}>Save All Settings</DropdownItem>
+                <DropdownDivider/>
+                <DropdownItem on:click={downloadToml}>Download TOML file</DropdownItem>
+            </Dropdown>
+            <NavLi>Device
+                <ChevronDownOutline class="w-6 h-6 ms-2 text-primary-800 dark:text-white inline"/>
+            </NavLi>
+            <Dropdown class="w-44 z-20" bind:open={deviceDropdownOpen}>
+                <DropdownItem on:click={showConnectedDevice}>Check...</DropdownItem>
+                <DropdownItem>Restart...</DropdownItem>
+                <DropdownDivider/>
+                <DropdownItem>Factory Reset...</DropdownItem>
+            </Dropdown>
+            <NavLi>Help
+                <ChevronDownOutline class="w-6 h-6 ms-2 text-primary-800 dark:text-white inline"/>
+            </NavLi>
+            <Dropdown class="w-36 z-20" bind:open={helpDropdownOpen}>
+                <DropdownItem>Go to Web site...</DropdownItem>
+                <DropdownDivider/>
+                <DropdownItem>Version</DropdownItem>
+            </Dropdown>
+        </NavUl>
     </div>
+
+    <Modal title="Connected Keyboard Info" bind:open={connectedDeviceModal} size="xs" outsideclose autoclose>
+        <Card>
+            <ul class="my-7 space-y-4">
+                <li class="flex space-x-2 rtl:space-x-reverse">
+                    <h5 class="ml-4 -mb-2 text-xl font-medium text-gray-500 dark-text-gray-400">
+                        {connectedDeviceList[0].manufacturer}
+                    </h5>
+                </li>
+                <li class="flex space-x-2 rtl:space-x-reverse">
+                    <div class="ml-4 flex items-baseline text-gray-900 dark:text-white">
+                <span class="text-3xl  font-semibold">
+                    {connectedDeviceList[0].productname}
+                </span>
+                    </div>
+                </li>
+                <li class="flex space-x-2 rtl:space-x-reverse float-end">
+                    <div class="-mt-2 mr-10 flex items-baseline text-gray-900 dark:text-white">
+                <span class="ms-1 text-xs font-normal text-gray-500 dark:text-gray-400">
+                    {connectedDeviceList[0].serialnumber}
+                </span>
+                    </div>
+                </li>
+            </ul>
+        </Card>
+    </Modal>
 
     <Modal title="Import TOML file" bind:open={clickOutsideImport} outsideclose>
         <Dropzone
