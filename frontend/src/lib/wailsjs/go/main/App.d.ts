@@ -3,6 +3,8 @@
 
 export function CheckHID():Promise<any>;
 
+export function FactoryReset():Promise<void>;
+
 export function GetNormalKeyOfLayout1(arg1:number,arg2:number):Promise<string>;
 
 export function GetNormalKeyOfLayout2(arg1:number,arg2:number):Promise<string>;
@@ -18,3 +20,5 @@ export function GetUpperKeyOfLayout2(arg1:number,arg2:number):Promise<string>;
 export function GetUpperModifiersOfLayout1(arg1:number,arg2:number):Promise<number>;
 
 export function GetUpperModifiersOfLayout2(arg1:number,arg2:number):Promise<number>;
+
+export function Restart():Promise<void>;

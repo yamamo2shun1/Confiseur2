@@ -6,6 +6,10 @@ export function CheckHID() {
   return window['go']['main']['App']['CheckHID']();
 }
 
+export function FactoryReset() {
+  return window['go']['main']['App']['FactoryReset']();
+}
+
 export function GetNormalKeyOfLayout1(arg1, arg2) {
   return window['go']['main']['App']['GetNormalKeyOfLayout1'](arg1, arg2);
 }
@@ -36,4 +40,8 @@ export function GetUpperModifiersOfLayout1(arg1, arg2) {
 
 export function GetUpperModifiersOfLayout2(arg1, arg2) {
   return window['go']['main']['App']['GetUpperModifiersOfLayout2'](arg1, arg2);
+}
+
+export function Restart() {
+  return window['go']['main']['App']['Restart']();
 }

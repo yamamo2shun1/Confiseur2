@@ -40,6 +40,7 @@
     import {LogError, LogInfo} from "../wailsjs/runtime/runtime.js";
     import {
         CheckHID,
+        FactoryReset,
         GetNormalKeyOfLayout1,
         GetNormalKeyOfLayout2,
         GetNormalModifiersOfLayout1,
@@ -47,8 +48,9 @@
         GetUpperKeyOfLayout1,
         GetUpperKeyOfLayout2,
         GetUpperModifiersOfLayout1,
-        GetUpperModifiersOfLayout2
-    } from "../wailsjs/go/main/App.js";
+        GetUpperModifiersOfLayout2,
+        Restart
+    } from "./lib/wailsjs/go/main/App.js";
 
     let radioGroup = "";
     let directionGroup = "";
@@ -242,6 +244,9 @@
     let fileDropdownOpen = false;
     let deviceDropdownOpen = false;
     let helpDropdownOpen = false;
+
+    let restartModal = false;
+    let factoryResetModal = false
 
     let connectedDeviceModal = false;
     let connectedDeviceList = [
@@ -692,10 +697,10 @@
         document.body.removeChild(link);
     }
 
-    function showConnectedDevice() {
+    function showConnectedKeyboard() {
         deviceDropdownOpen = false;
         connectedDeviceModal = true;
-        
+
         connectedDeviceList[0].manufacturer = "";
         connectedDeviceList[0].productname = "";
         connectedDeviceList[0].serialnumber = "";
@@ -708,6 +713,16 @@
             LogInfo("Product: " + info[1]);
             LogInfo("Serial: " + info[2]);
         });
+    }
+
+    function restartKeyboard() {
+        deviceDropdownOpen = false;
+        restartModal = true;
+    }
+
+    function confirmFactoryReset() {
+        deviceDropdownOpen = false;
+        factoryResetModal = true;
     }
 </script>
 
@@ -730,10 +745,10 @@
                 <ChevronDownOutline class="w-6 h-6 ms-2 text-primary-800 dark:text-white inline"/>
             </NavLi>
             <Dropdown class="w-44 z-20" bind:open={deviceDropdownOpen}>
-                <DropdownItem on:click={showConnectedDevice}>Check...</DropdownItem>
-                <DropdownItem>Restart...</DropdownItem>
+                <DropdownItem on:click={showConnectedKeyboard}>Check...</DropdownItem>
+                <DropdownItem on:click={restartKeyboard}>Restart...</DropdownItem>
                 <DropdownDivider/>
-                <DropdownItem>Factory Reset...</DropdownItem>
+                <DropdownItem on:click={confirmFactoryReset}>Factory Reset...</DropdownItem>
             </Dropdown>
             <NavLi>Help
                 <ChevronDownOutline class="w-6 h-6 ms-2 text-primary-800 dark:text-white inline"/>
@@ -770,6 +785,29 @@
                 </li>
             </ul>
         </Card>
+    </Modal>
+
+    <Modal title="Restart" bind:open={restartModal} size="xs" outsideclose autoclose>
+        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+            Do you want to restart?
+        </p>
+        <svelte:fragment slot="footer">
+            <Button on:click={Restart}>OK</Button>
+            <Button color="alternative">Cancel</Button>
+        </svelte:fragment>
+    </Modal>
+
+    <Modal title="Factory Reset" bind:open={factoryResetModal} size="xs" outsideclose autoclose>
+        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+           Do you want to perform a factory reset?
+        </p>
+        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400 text-left">
+            After executing, all keyboard settings will be initialized to the factory settings.
+        </p>
+        <svelte:fragment slot="footer">
+            <Button on:click={FactoryReset}>OK</Button>
+            <Button color="alternative">Cancel</Button>
+        </svelte:fragment>
     </Modal>
 
     <Modal title="Import TOML file" bind:open={clickOutsideImport} outsideclose>

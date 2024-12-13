@@ -334,3 +334,27 @@ func (a *App) CheckHID() [3]string {
 
 	return checkHid()
 }
+
+func (a *App) Restart() {
+	// Initialize the hid package.
+	if err := hid.Init(); err != nil {
+		log.Fatal(err)
+	}
+
+	// Open the device using the VID and PID.
+	openConnectedHIDDevices()
+
+	restart(0)
+}
+
+func (a *App) FactoryReset() {
+	// Initialize the hid package.
+	if err := hid.Init(); err != nil {
+		log.Fatal(err)
+	}
+
+	// Open the device using the VID and PID.
+	openConnectedHIDDevices()
+
+	factoryReset(0)
+}
