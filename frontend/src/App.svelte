@@ -11,7 +11,7 @@
         Modal,
         NavLi,
         NavUl,
-        RadioButton,
+        RadioButton, Spinner,
         TabItem,
         Table,
         TableBody,
@@ -248,6 +248,7 @@
 
     let restartModal = false;
     let factoryResetModal = false
+    let loadingModal = false;
 
     let connectedDeviceModal = false;
     let connectedDeviceList = [
@@ -645,6 +646,7 @@
 
     function loadFromKeyboard() {
         layoutDropdownOpen = false;
+        loadingModal = true;
 
         LogInfo("--- Load from keyboard ---");
         LoadKeymapFromKeyboard().then(() => {
@@ -711,6 +713,7 @@
                     });
                 }
             }
+            loadingModal = false;
         });
     }
 
@@ -828,6 +831,11 @@
             </Dropdown>
         </NavUl>
     </div>
+
+    <Modal title="Loading..." bind:open={loadingModal} size="xs" autoclose>
+        <div class="text-center"><Spinner size={8} /></div>
+    </Modal>
+
 
     <Modal title="Connected Keyboard Info" bind:open={connectedDeviceModal} size="xs" outsideclose autoclose>
         <Card>
