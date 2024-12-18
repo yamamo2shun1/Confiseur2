@@ -395,7 +395,6 @@
     }
 
     function renewKeytop(event) {
-        LogInfo("a"+event.target.textContent+"b");
         if (event.target.textContent.trim() === "") {
             if (selectedNormal) {
                 normalLayout[selectedLayoutIndex][selectedRow][selectedCol] = "&nbsp;";
