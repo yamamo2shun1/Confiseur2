@@ -28,15 +28,93 @@ type Layout struct {
 
 var err error
 
+var isInitLayout = false
+
 var hidDevices []*hid.Device
 var connectedDeviceNum = 0
 
 var layouts Layouts
 var remapRows []byte = make([]byte, 32)
 
-var maxRows = 5
-var maxColumns = 13
+var maxRows = 4
+var maxColumns = 10
 var isStk = false
+
+func initBlankTOML() {
+	if isInitLayout {
+		return
+	}
+
+	isInitLayout = true
+
+	layouts.Layout1 = Layout{
+		Normal:    make([][][]string, 4),
+		Upper:     make([][][]string, 4),
+		Stick:     make([][][]string, 2),
+		Led:       make([][]byte, 3),
+		Intensity: make([]float64, 1),
+	}
+
+	for i := range layouts.Layout1.Normal {
+		layouts.Layout1.Normal[i] = make([][]string, 10)
+		layouts.Layout1.Upper[i] = make([][]string, 10)
+	}
+
+	for i := range layouts.Layout1.Stick {
+		layouts.Layout1.Stick[i] = make([][]string, 9)
+	}
+
+	for i := range layouts.Layout1.Led {
+		layouts.Layout1.Led[i] = make([]byte, 3)
+	}
+
+	for i := range layouts.Layout1.Normal {
+		for j := range layouts.Layout1.Normal[i] {
+			layouts.Layout1.Normal[i][j] = make([]string, 2)
+			layouts.Layout1.Upper[i][j] = make([]string, 2)
+		}
+	}
+
+	for i := range layouts.Layout1.Stick {
+		for j := range layouts.Layout1.Stick[i] {
+			layouts.Layout1.Stick[i][j] = make([]string, 2)
+		}
+	}
+
+	layouts.Layout2 = Layout{
+		Normal:    make([][][]string, 4),
+		Upper:     make([][][]string, 4),
+		Stick:     make([][][]string, 2),
+		Led:       make([][]byte, 3),
+		Intensity: make([]float64, 1),
+	}
+
+	for i := range layouts.Layout2.Normal {
+		layouts.Layout2.Normal[i] = make([][]string, 10)
+		layouts.Layout2.Upper[i] = make([][]string, 10)
+	}
+
+	for i := range layouts.Layout2.Stick {
+		layouts.Layout2.Stick[i] = make([][]string, 9)
+	}
+
+	for i := range layouts.Layout2.Led {
+		layouts.Layout2.Led[i] = make([]byte, 3)
+	}
+
+	for i := range layouts.Layout2.Normal {
+		for j := range layouts.Layout2.Normal[i] {
+			layouts.Layout2.Normal[i][j] = make([]string, 2)
+			layouts.Layout2.Upper[i][j] = make([]string, 2)
+		}
+	}
+
+	for i := range layouts.Layout2.Stick {
+		for j := range layouts.Layout2.Stick[i] {
+			layouts.Layout2.Stick[i][j] = make([]string, 2)
+		}
+	}
+}
 
 func getConnectedDeviceNum() int {
 	return connectedDeviceNum
@@ -190,9 +268,49 @@ func loadKeymap(index int, val byte) {
 					return
 				}
 			} else {
-				_, err := fmt.Fprintf(w, "{%s, %02X}\t", KEYNAME[remapRows[2*j]], remapRows[2*j+1])
-				if err != nil {
-					return
+				switch val {
+				case 0x11:
+					layouts.Layout1.Normal[i][j][0] = KEYNAME[remapRows[2*j]]
+					layouts.Layout1.Normal[i][j][1] = fmt.Sprintf("%08b", remapRows[2*j+1])
+					_, err := fmt.Fprintf(w, "{%s, %s}\t", layouts.Layout1.Normal[i][j][0], layouts.Layout1.Normal[i][j][1])
+					if err != nil {
+						return
+					}
+				case 0x12:
+					layouts.Layout1.Upper[i][j][0] = KEYNAME[remapRows[2*j]]
+					layouts.Layout1.Upper[i][j][1] = fmt.Sprintf("%08b", remapRows[2*j+1])
+					_, err := fmt.Fprintf(w, "{%s, %s}\t", layouts.Layout1.Upper[i][j][0], layouts.Layout1.Upper[i][j][1])
+					if err != nil {
+						return
+					}
+				case 0x13:
+					layouts.Layout1.Stick[i][j][0] = KEYNAME[remapRows[2*j]]
+					layouts.Layout1.Stick[i][j][1] = fmt.Sprintf("%08b", remapRows[2*j+1])
+					_, err := fmt.Fprintf(w, "{%s, %s}\t", layouts.Layout1.Stick[i][j][0], layouts.Layout1.Stick[i][j][1])
+					if err != nil {
+						return
+					}
+				case 0x19:
+					layouts.Layout2.Normal[i][j][0] = KEYNAME[remapRows[2*j]]
+					layouts.Layout2.Normal[i][j][1] = fmt.Sprintf("%08b", remapRows[2*j+1])
+					_, err := fmt.Fprintf(w, "{%s, %s}\t", layouts.Layout2.Normal[i][j][0], layouts.Layout2.Normal[i][j][1])
+					if err != nil {
+						return
+					}
+				case 0x1A:
+					layouts.Layout2.Upper[i][j][0] = KEYNAME[remapRows[2*j]]
+					layouts.Layout2.Upper[i][j][1] = fmt.Sprintf("%08b", remapRows[2*j+1])
+					_, err := fmt.Fprintf(w, "{%s, %s}\t", layouts.Layout2.Upper[i][j][0], layouts.Layout2.Upper[i][j][1])
+					if err != nil {
+						return
+					}
+				case 0x1B:
+					layouts.Layout2.Stick[i][j][0] = KEYNAME[remapRows[2*j]]
+					layouts.Layout2.Stick[i][j][1] = fmt.Sprintf("%08b", remapRows[2*j+1])
+					_, err := fmt.Fprintf(w, "{%s, %s}\t", layouts.Layout2.Stick[i][j][0], layouts.Layout2.Stick[i][j][1])
+					if err != nil {
+						return
+					}
 				}
 			}
 		}

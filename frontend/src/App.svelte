@@ -49,6 +49,7 @@
         GetUpperKeyOfLayout2,
         GetUpperModifiersOfLayout1,
         GetUpperModifiersOfLayout2,
+        LoadKeymapFromKeyboard,
         Restart
     } from "./lib/wailsjs/go/main/App.js";
 
@@ -644,6 +645,73 @@
 
     function loadFromKeyboard() {
         layoutDropdownOpen = false;
+
+        LogInfo("--- Load from keyboard ---");
+        LoadKeymapFromKeyboard().then(() => {
+            for (let row = 0; row < 4; row++) {
+                for (let col = 0; col < 10; col++) {
+                    if ((row === 3 && col === 0) || (row === 3 && col === 3) || (row === 3 && col === 5)) {
+                        continue;
+                    }
+
+                    GetNormalKeyOfLayout1(row, col).then((key) => {
+                        GetNormalModifiersOfLayout1(row, col).then((mods) => {
+                            LogInfo(`NORMAL1: row: ${row}, col: ${col}, key: ${key}, mods: ${mods}`);
+                            if (key === '&nbsp;' && mods > 0) {
+                                normalLayout[0][row][col] = 'Mod.';
+                            } else if (key === '&nbsp;' && mods === 0) {
+                                normalLayout[0][row][col] = '';
+                            } else {
+                                normalLayout[0][row][col] = key;
+                            }
+                            normalModifiers[0][row][col] = mods;
+                        });
+                    });
+
+                    GetUpperKeyOfLayout1(row, col).then((key) => {
+                        GetUpperModifiersOfLayout1(row, col).then((mods) => {
+                            LogInfo(`UPPER1: row: ${row}, col: ${col}, key: ${key}, mods: ${mods}`);
+                            if (key === '&nbsp;' && mods > 0) {
+                                upperLayout[0][row][col] = 'Mod.';
+                            } else if (key === '&nbsp;' && mods === 0) {
+                                upperLayout[0][row][col] = '';
+                            } else {
+                                upperLayout[0][row][col] = key;
+                            }
+                            upperModifiers[0][row][col] = mods;
+                        });
+                    });
+
+                    GetNormalKeyOfLayout2(row, col).then((key) => {
+                        GetNormalModifiersOfLayout2(row, col).then((mods) => {
+                            LogInfo(`NORMAL2: row: ${row}, col: ${col}, key: ${key}, mods: ${mods}`);
+                            if (key === '&nbsp;' && mods > 0) {
+                                normalLayout[0][row][col] = 'Mod.';
+                            } else if (key === '&nbsp;' && mods === 0) {
+                                normalLayout[1][row][col] = '';
+                            } else {
+                                normalLayout[1][row][col] = key;
+                            }
+                            normalModifiers[1][row][col] = mods;
+                        });
+                    });
+
+                    GetUpperKeyOfLayout2(row, col).then((key) => {
+                        GetUpperModifiersOfLayout2(row, col).then((mods) => {
+                            LogInfo(`UPPER2: row: ${row}, col: ${col}, key: ${key}, mods: ${mods}`);
+                            if (key === '&nbsp;' && mods > 0) {
+                                upperLayout[1][row][col] = 'Mod.';
+                            } else if (key === '&nbsp;' && mods === 0) {
+                                upperLayout[1][row][col] = '';
+                            } else {
+                                upperLayout[1][row][col] = key;
+                            }
+                            upperModifiers[1][row][col] = mods;
+                        });
+                    });
+                }
+            }
+        });
     }
 
     function openDropzone() {

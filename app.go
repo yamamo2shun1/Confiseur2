@@ -27,13 +27,7 @@ func (a *App) startup(ctx context.Context) {
 	// Perform your setup here
 	a.ctx = ctx
 
-	// Initialize the hid package.
-	if err := hid.Init(); err != nil {
-		log.Fatal(err)
-	}
-
-	// Open the device using the VID and PID.
-	openConnectedHIDDevices()
+	swapKeyCodeAndName()
 }
 
 // domReady is called after front-end resources have been loaded
@@ -56,7 +50,48 @@ func (a *App) shutdown(ctx context.Context) {
 	// Perform your teardown here
 }
 
+func (a *App) LoadKeymapFromKeyboard() {
+	// Initialize the hid package.
+	if err := hid.Init(); err != nil {
+		log.Fatal(err)
+	}
+
+	// Open the device using the VID and PID.
+	openConnectedHIDDevices()
+
+	initBlankTOML()
+
+	fmt.Println("--- Current Hardware Layout ScanCode ---")
+	fmt.Println("::Layout1::")
+	fmt.Println("  Normal ->")
+	loadKeymap(0, 0x11)
+	fmt.Println("  Upper ->")
+	loadKeymap(0, 0x12)
+	fmt.Println("  Stick ->")
+	loadKeymap(0, 0x13)
+	//fmt.Println("  Led ->")
+	//loadKeymap(0, 0x14)
+	//fmt.Println("  Intensity ->")
+	//loadKeymap(0, 0x15)
+	//fmt.Println("")
+	fmt.Println("::Layout2::")
+	fmt.Println("  Normal ->")
+	loadKeymap(0, 0x19)
+	fmt.Println("  Upper ->")
+	loadKeymap(0, 0x1A)
+	fmt.Println("  Stick ->")
+	loadKeymap(0, 0x1B)
+	//fmt.Println("  Led ->")
+	//loadKeymap(0, 0x1C)
+	//fmt.Println("  Intensity ->")
+	//loadKeymap(0, 0x1D)
+	//fmt.Println("")
+
+}
+
 func LoadTOML(inputdata string) {
+	isInitLayout = true
+	
 	fmt.Println("-- Remap Layout ScanCode ---")
 
 	_, err = toml.Decode(inputdata, &layouts)
@@ -205,7 +240,7 @@ func LoadTOML(inputdata string) {
 }
 
 func (a *App) GetNormalKeyOfLayout1(row int, col int) string {
-	//fmt.Printf("row=%d, col=%d %s(%s)\n", row, col, layouts.Layout1.Normal[row][col][0], layouts.Layout1.Normal[row][col][1])
+	fmt.Printf("row=%d, col=%d %s(%s)\n", row, col, layouts.Layout1.Normal[row][col][0], layouts.Layout1.Normal[row][col][1])
 
 	return KEYTOP[layouts.Layout1.Normal[row][col][0]]
 }

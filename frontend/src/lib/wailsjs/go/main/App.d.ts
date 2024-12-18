@@ -21,4 +21,6 @@ export function GetUpperModifiersOfLayout1(arg1:number,arg2:number):Promise<numb
 
 export function GetUpperModifiersOfLayout2(arg1:number,arg2:number):Promise<number>;
 
+export function LoadKeymapFromKeyboard():Promise<void>;
+
 export function Restart():Promise<void>;

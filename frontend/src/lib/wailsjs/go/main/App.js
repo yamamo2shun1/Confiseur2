@@ -42,6 +42,10 @@ export function GetUpperModifiersOfLayout2(arg1, arg2) {
   return window['go']['main']['App']['GetUpperModifiersOfLayout2'](arg1, arg2);
 }
 
+export function LoadKeymapFromKeyboard() {
+  return window['go']['main']['App']['LoadKeymapFromKeyboard']();
+}
+
 export function Restart() {
   return window['go']['main']['App']['Restart']();
 }
