@@ -59,7 +59,7 @@
     let selectedSettingTab = 0;
 
     let allKeyMaps = [
-        {value: " ", name: '&nbsp;'},
+        {value: " ", name: "&nbsp;"},
         {value: "A", name: "A"},
         {value: "B", name: "B"},
         {value: "C", name: "C"},
@@ -337,26 +337,26 @@
             isDisabledStkDropdown = true;
             currentStkKeycode = "";
 
-            isCheckedRCTRL = !!(normalModifiers[0][selectedRow][selectedCol] & 0b00000001);
-            isCheckedRSHIFT = !!((normalModifiers[0][selectedRow][selectedCol] >> 1) & 0b00000001);
-            isCheckedRALT = !!((normalModifiers[0][selectedRow][selectedCol] >> 2) & 0b00000001);
-            isCheckedRGUI = !!((normalModifiers[0][selectedRow][selectedCol] >> 3) & 0b00000001);
-            isCheckedLCTRL = !!((normalModifiers[0][selectedRow][selectedCol] >> 4) & 0b00000001);
-            isCheckedLSHIFT = !!((normalModifiers[0][selectedRow][selectedCol] >> 5) & 0b00000001);
-            isCheckedLALT = !!((normalModifiers[0][selectedRow][selectedCol] >> 6) & 0b00000001);
-            isCheckedLGUI = !!((normalModifiers[0][selectedRow][selectedCol] >> 7) & 0b00000001);
+            isCheckedRCTRL = !!(normalModifiers[selectedLayoutIndex][selectedRow][selectedCol] & 0b00000001);
+            isCheckedRSHIFT = !!((normalModifiers[selectedLayoutIndex][selectedRow][selectedCol] >> 1) & 0b00000001);
+            isCheckedRALT = !!((normalModifiers[selectedLayoutIndex][selectedRow][selectedCol] >> 2) & 0b00000001);
+            isCheckedRGUI = !!((normalModifiers[selectedLayoutIndex][selectedRow][selectedCol] >> 3) & 0b00000001);
+            isCheckedLCTRL = !!((normalModifiers[selectedLayoutIndex][selectedRow][selectedCol] >> 4) & 0b00000001);
+            isCheckedLSHIFT = !!((normalModifiers[selectedLayoutIndex][selectedRow][selectedCol] >> 5) & 0b00000001);
+            isCheckedLALT = !!((normalModifiers[selectedLayoutIndex][selectedRow][selectedCol] >> 6) & 0b00000001);
+            isCheckedLGUI = !!((normalModifiers[selectedLayoutIndex][selectedRow][selectedCol] >> 7) & 0b00000001);
         } else {
             isDisabledStkDropdown = true;
             currentStkKeycode = "";
 
-            isCheckedRCTRL = !!(upperModifiers[0][selectedRow][selectedCol] & 0b00000001);
-            isCheckedRSHIFT = !!((upperModifiers[0][selectedRow][selectedCol] >> 1) & 0b00000001);
-            isCheckedRALT = !!((upperModifiers[0][selectedRow][selectedCol] >> 2) & 0b00000001);
-            isCheckedRGUI = !!((upperModifiers[0][selectedRow][selectedCol] >> 3) & 0b00000001);
-            isCheckedLCTRL = !!((upperModifiers[0][selectedRow][selectedCol] >> 4) & 0b00000001);
-            isCheckedLSHIFT = !!((upperModifiers[0][selectedRow][selectedCol] >> 5) & 0b00000001);
-            isCheckedLALT = !!((upperModifiers[0][selectedRow][selectedCol] >> 6) & 0b00000001);
-            isCheckedLGUI = !!((upperModifiers[0][selectedRow][selectedCol] >> 7) & 0b00000001);
+            isCheckedRCTRL = !!(upperModifiers[selectedLayoutIndex][selectedRow][selectedCol] & 0b00000001);
+            isCheckedRSHIFT = !!((upperModifiers[selectedLayoutIndex][selectedRow][selectedCol] >> 1) & 0b00000001);
+            isCheckedRALT = !!((upperModifiers[selectedLayoutIndex][selectedRow][selectedCol] >> 2) & 0b00000001);
+            isCheckedRGUI = !!((upperModifiers[selectedLayoutIndex][selectedRow][selectedCol] >> 3) & 0b00000001);
+            isCheckedLCTRL = !!((upperModifiers[selectedLayoutIndex][selectedRow][selectedCol] >> 4) & 0b00000001);
+            isCheckedLSHIFT = !!((upperModifiers[selectedLayoutIndex][selectedRow][selectedCol] >> 5) & 0b00000001);
+            isCheckedLALT = !!((upperModifiers[selectedLayoutIndex][selectedRow][selectedCol] >> 6) & 0b00000001);
+            isCheckedLGUI = !!((upperModifiers[selectedLayoutIndex][selectedRow][selectedCol] >> 7) & 0b00000001);
         }
     }
 
@@ -395,10 +395,19 @@
     }
 
     function renewKeytop(event) {
-        if (selectedNormal) {
-            normalLayout[0][selectedRow][selectedCol] = keytopMap.get(event.target.textContent);
+        LogInfo("a"+event.target.textContent+"b");
+        if (event.target.textContent.trim() === "") {
+            if (selectedNormal) {
+                normalLayout[selectedLayoutIndex][selectedRow][selectedCol] = "&nbsp;";
+            } else {
+                upperLayout[selectedLayoutIndex][selectedRow][selectedCol] = "&nbsp;";
+            }
         } else {
-            upperLayout[0][selectedRow][selectedCol] = keytopMap.get(event.target.textContent);
+            if (selectedNormal) {
+                normalLayout[selectedLayoutIndex][selectedRow][selectedCol] = keytopMap.get(event.target.textContent);
+            } else {
+                upperLayout[selectedLayoutIndex][selectedRow][selectedCol] = keytopMap.get(event.target.textContent);
+            }
         }
 
         dropdownOpen = false;
@@ -407,15 +416,15 @@
     function renewModifiers(event, index) {
         if (selectedNormal) {
             if (event.target.checked) {
-                normalModifiers[0][selectedRow][selectedCol] |= 0b00000001 << index;
+                normalModifiers[selectedLayoutIndex][selectedRow][selectedCol] |= 0b00000001 << index;
             } else {
-                normalModifiers[0][selectedRow][selectedCol] &= ~(0b00000001 << index);
+                normalModifiers[selectedLayoutIndex][selectedRow][selectedCol] &= ~(0b00000001 << index);
             }
         } else {
             if (event.target.checked) {
-                upperModifiers[0][selectedRow][selectedCol] |= 0b00000001 << index;
+                upperModifiers[selectedLayoutIndex][selectedRow][selectedCol] |= 0b00000001 << index;
             } else {
-                upperModifiers[0][selectedRow][selectedCol] &= ~(0b00000001 << index);
+                upperModifiers[selectedLayoutIndex][selectedRow][selectedCol] &= ~(0b00000001 << index);
             }
 
         }
@@ -554,7 +563,7 @@
                         GetNormalModifiersOfLayout2(row, col).then((mods) => {
                             LogInfo(`NORMAL: row: ${row}, col: ${col}, key: ${key}, mods: ${mods}`);
                             if (key === '&nbsp;' && mods > 0) {
-                                normalLayout[0][row][col] = 'Mod.';
+                                normalLayout[1][row][col] = 'Mod.';
                             } else if (key === '&nbsp;' && mods === 0) {
                                 normalLayout[1][row][col] = '';
                             } else {
@@ -688,7 +697,7 @@
                         GetNormalModifiersOfLayout2(row, col).then((mods) => {
                             LogInfo(`NORMAL2: row: ${row}, col: ${col}, key: ${key}, mods: ${mods}`);
                             if (key === '&nbsp;' && mods > 0) {
-                                normalLayout[0][row][col] = 'Mod.';
+                                normalLayout[1][row][col] = 'Mod.';
                             } else if (key === '&nbsp;' && mods === 0) {
                                 normalLayout[1][row][col] = '';
                             } else {
